@@ -79,11 +79,12 @@ const Navbar: React.FC = () => {
             <Link href={'/'}>
               <div className="flex items-center gap-3">
                 <Image
-                  height={300}
-                  width={300}
+                  height={100}
+                  width={100}
                   loading="eager"
                   src="/logoo.png"
                   alt="logo"
+                  className="text-white"
                 />
               </div>
             </Link>

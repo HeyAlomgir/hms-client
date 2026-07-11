@@ -85,7 +85,7 @@ const SignUpPage: React.FC = () => {
             Create Your Account
           </h2>
           <p className="text-sm text-neutral-400 mt-1">
-            Join MediTract & start managing your health digitally
+            Join CarePulse & start managing your health digitally
           </p>
         </div>
 
