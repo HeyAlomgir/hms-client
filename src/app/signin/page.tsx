@@ -63,7 +63,7 @@ const SignInPage: React.FC = () => {
             Welcome Back
           </h2>
           <p className="text-sm text-neutral-400 mt-1">
-            Sign in to your AI PromptVerse account
+            Sign in to your Carepulse account
           </p>
         </div>
 
