@@ -196,7 +196,7 @@ const AddDoctorPage = (): React.JSX.Element => {
                 router.push("/dashboard/admin/all-doctors");
             }, 1000);
         } finally {
-            // বাটন লোডিং স্টেট থেকে বের করার জন্য এটি অবশ্যই রান করবে
+
             setSubmitting(false);
         }
     };
@@ -221,7 +221,7 @@ const AddDoctorPage = (): React.JSX.Element => {
                 <Separator className="bg-gray-800" />
 
                 <Card.Content className="p-4 md:p-6">
-                    {/* গ্রিড লেআউট ফিক্সড করা হয়েছে w-full এবং min-w-0 দিয়ে যাতে স্ক্রিন না কাটে */}
+                    {/*grid layout*/}
                     <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full min-w-0">
 
                         {/* ================= LEFT COLUMN ================= */}
