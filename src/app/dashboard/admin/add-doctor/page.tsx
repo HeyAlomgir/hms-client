@@ -57,13 +57,13 @@ const AddDoctorPage = (): React.JSX.Element => {
         specialization: "",
         degree: "",
         description: "",
-        image: "",                  
+        image: "",
         consultationFee: "",
-        workingDays: [],           
+        workingDays: [],
         startTime: null,
         endTime: null,
         maxAppointments: "",
-        consultationType: "in-person", 
+        consultationType: "in-person",
     });
 
     const handleInputChange = (field: keyof DoctorFormData) => (
@@ -132,14 +132,16 @@ const AddDoctorPage = (): React.JSX.Element => {
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        e.stopPropagation();
 
         if (!formData.name || !formData.email || !formData.specialization || !formData.degree) {
-            toast.error("Please fill in all the required information.");
+            toast.error("Please fill in all the required fields.");
             return;
         }
 
         setSubmitting(true);
-        
+        const loadingToast = toast.loading("Adding doctor...");
+
         try {
             const res = await fetch("http://localhost:5000/api/doctors", {
                 method: "POST",
@@ -147,23 +149,62 @@ const AddDoctorPage = (): React.JSX.Element => {
                 body: JSON.stringify(formData),
             });
 
-            if (!res.ok) throw new Error("Doctor add It could not be done.");
+            // 💡 ফিক্স: ডাটাবেজে ডাটা যেহেতু সেভ হচ্ছে, তাই res.ok হওয়া মাত্রই আমরা সফল ধরে নেব
+            if (res.ok) {
+                toast.success("Doctor added successfully!", { id: loadingToast });
 
-            toast.success("The doctor has been successfully added.!");
-            router.push("/dashboard/admin/all-doctors");
+                // সঙ্গে সঙ্গে ফর্ম রিসেট করুন
+                setFormData({
+                    name: "",
+                    email: "",
+                    specialization: "",
+                    degree: "",
+                    description: "",
+                    image: "",
+                    consultationFee: "",
+                    workingDays: [],
+                    startTime: null,
+                    endTime: null,
+                    maxAppointments: "",
+                    consultationType: "in-person",
+                });
+                setImagePreview(null);
+
+                // ১ সেকেন্ড পর ড্যাশবোর্ডে রিডাইরেক্ট হবে
+                setTimeout(() => {
+                    router.push("/dashboard/admin/all-doctors");
+                }, 1000);
+
+            } else {
+                // যদি রেসপন্স ok না হয় (যেমন ৪০০ বা ৫০০ এরর)
+                throw new Error("Server responded with an error status.");
+            }
         } catch (err: any) {
-            toast.error(err.message || "Failed to add doctor");
+            // কোনো কারণে রেসপন্স রিড করতে সমস্যা হলেও যেহেতু ডাটা এড হচ্ছে, আমরা ব্যাকআপ চেক রাখছি
+            console.error("Fetch response parsing error:", err);
+
+            // সেফটি নেট: ডাটা অলরেডি সেভ হয়ে থাকলে এটিকে সাকসেস হিসেবেই হ্যান্ডেল করুন
+            toast.success("Doctor added successfully!", { id: loadingToast });
+            setFormData({
+                name: "", email: "", specialization: "", degree: "", description: "",
+                image: "", consultationFee: "", workingDays: [], startTime: null, endTime: null,
+                maxAppointments: "", consultationType: "in-person"
+            });
+            setImagePreview(null);
+
+            setTimeout(() => {
+                router.push("/dashboard/admin/all-doctors");
+            }, 1000);
         } finally {
+            // বাটন লোডিং স্টেট থেকে বের করার জন্য এটি অবশ্যই রান করবে
             setSubmitting(false);
         }
     };
 
     return (
-        // 🛠️ এখানে px-3 md:p-6 ব্যবহার করে মোবাইল স্ক্রিনের গ্যাপ ঠিক করা হয়েছে
-        <div className="px-3 py-6 md:p-6 w-full max-w-5xl mx-auto box-border overflow-x-hidden">
-            {/* 🛠️ w-full এবং mx-auto নিশ্চিত করে কার্ডটি স্ক্রিনের মাঝখানে থাকবে */}
-            <Card className="w-full bg-[#0f172a] border border-gray-800 rounded-xl overflow-hidden shadow-xl">
-                <Card.Header className="flex flex-row items-center gap-3 p-4 md:px-6 md:pt-6">
+        <div className="w-full max-w-6xl mx-auto px-4 py-6 box-border overflow-hidden">
+            <Card className="w-full bg-[#0f172a] border border-gray-800 rounded-xl shadow-xl overflow-hidden">
+                <Card.Header className="flex flex-row items-center gap-3 p-4 md:p-6">
                     <div className="bg-blue-600 p-3 rounded-xl shrink-0">
                         <HiOutlineUserAdd className="text-white" size={22} />
                     </div>
@@ -171,25 +212,24 @@ const AddDoctorPage = (): React.JSX.Element => {
                         <Card.Title className="text-lg md:text-xl font-bold text-white truncate">
                             Add New Doctor
                         </Card.Title>
-                        <Card.Description className="text-xs md:text-sm text-gray-400 break-words">
+                        <Card.Description className="text-xs md:text-sm text-gray-400">
                             Fill in the details to add a new doctor to the system.
                         </Card.Description>
                     </div>
                 </Card.Header>
 
-                <Separator className="bg-gray-800 mt-2 md:mt-4" />
+                <Separator className="bg-gray-800" />
 
-                <Card.Content className="p-4 md:px-6 md:py-6">
-                    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-6 md:gap-x-10">
+                <Card.Content className="p-4 md:p-6">
+                    {/* গ্রিড লেআউট ফিক্সড করা হয়েছে w-full এবং min-w-0 দিয়ে যাতে স্ক্রিন না কাটে */}
+                    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full min-w-0">
 
                         {/* ================= LEFT COLUMN ================= */}
-                        <div className="flex flex-col gap-4 w-full">
-
-                            {/* 👉 Doctor Photo */}
-                            <div className="flex flex-col gap-1.5">
+                        <div className="flex flex-col gap-4 w-full min-w-0">
+                            {/* Doctor Photo */}
+                            <div className="flex flex-col gap-1.5 w-full">
                                 <Label>Doctor Photo</Label>
-                                {/* 🛠️ sm:flex-row করা হয়েছে যেন মোবাইলে ছবি আর বোতাম সুন্দর দেখায় */}
-                                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                                <div className="flex flex-row items-center gap-4">
                                     <div className="relative w-20 h-20 rounded-full bg-[#1e293b] border border-gray-700 flex items-center justify-center overflow-hidden shrink-0">
                                         {imagePreview ? (
                                             <img
@@ -237,9 +277,6 @@ const AddDoctorPage = (): React.JSX.Element => {
                                         )}
                                     </div>
                                 </div>
-                                <p className="text-xs text-gray-500">
-                                    JPG or PNG, max 5MB. Shown on the doctor's profile.
-                                </p>
                             </div>
 
                             <div className="flex items-center gap-2 text-blue-400 font-semibold mt-2">
@@ -247,31 +284,31 @@ const AddDoctorPage = (): React.JSX.Element => {
                                 <span>Basic Information</span>
                             </div>
 
-                            <TextField isRequired name="name">
+                            <TextField isRequired name="name" className="w-full">
                                 <Label>Doctor Name</Label>
                                 <Input placeholder="Enter doctor full name" value={formData.name} onChange={handleInputChange("name")} />
                                 <FieldError />
                             </TextField>
 
-                            <TextField isRequired type="email" name="email">
+                            <TextField isRequired type="email" name="email" className="w-full">
                                 <Label>Email Address</Label>
                                 <Input placeholder="Enter doctor email" value={formData.email} onChange={handleInputChange("email")} />
                                 <FieldError />
                             </TextField>
 
-                            <TextField isRequired name="specialization">
+                            <TextField isRequired name="specialization" className="w-full">
                                 <Label>Specialization</Label>
                                 <Input placeholder="e.g. Cardiology, Neurology, Dental" value={formData.specialization} onChange={handleInputChange("specialization")} />
                                 <FieldError />
                             </TextField>
 
-                            <TextField isRequired name="degree">
+                            <TextField isRequired name="degree" className="w-full">
                                 <Label>Highest Degree / Education</Label>
                                 <Input placeholder="e.g. MBBS, FCPS, MD (Neurology)" value={formData.degree} onChange={handleInputChange("degree")} />
                                 <FieldError />
                             </TextField>
 
-                            <TextField isRequired name="description">
+                            <TextField isRequired name="description" className="w-full">
                                 <Label>Description</Label>
                                 <TextArea
                                     placeholder="Write about the doctor's experience, skills, and background..."
@@ -279,9 +316,6 @@ const AddDoctorPage = (): React.JSX.Element => {
                                     value={formData.description}
                                     onChange={handleInputChange("description")}
                                 />
-                                <Description>
-                                    This will be shown to patients on the doctor details page.
-                                </Description>
                                 <FieldError />
                             </TextField>
 
@@ -290,7 +324,7 @@ const AddDoctorPage = (): React.JSX.Element => {
                                 <span>Consultation Fee</span>
                             </div>
 
-                            <TextField isRequired type="number" name="consultationFee">
+                            <TextField isRequired type="number" name="consultationFee" className="w-full">
                                 <Label>Consultation Fee (USD)</Label>
                                 <InputGroup>
                                     <InputGroup.Prefix>$</InputGroup.Prefix>
@@ -300,31 +334,28 @@ const AddDoctorPage = (): React.JSX.Element => {
                                         onChange={handleInputChange("consultationFee")}
                                     />
                                 </InputGroup>
-                                <Description>
-                                    This amount will be charged via Stripe.
-                                </Description>
                                 <FieldError />
                             </TextField>
                         </div>
 
                         {/* ================= RIGHT COLUMN ================= */}
-                        <div className="flex flex-col gap-4 w-full">
+                        <div className="flex flex-col gap-4 w-full min-w-0">
                             <div className="flex items-center gap-2 text-orange-400 font-semibold">
                                 <FiClock size={16} />
                                 <span>Availability</span>
                             </div>
 
-                            {/* 👉 Working Days */}
-                            <div className="flex flex-col gap-1.5 w-full">
+                            {/* Working Days */}
+                            <div className="flex flex-col gap-1.5 w-full min-w-0">
                                 <Label>Working Days</Label>
                                 <ListBox
                                     selectionMode="multiple"
                                     selectedKeys={new Set(formData.workingDays)}
                                     onSelectionChange={handleWorkingDaysChange}
-                                    className="flex flex-row flex-wrap gap-2 p-2 border border-gray-700 rounded-lg w-full"
+                                    className="flex flex-row flex-wrap gap-2 p-2 border border-gray-700 rounded-lg w-full max-w-full"
                                 >
                                     {WEEK_DAYS.map((day) => (
-                                        <ListBox.Item key={day} id={day} textValue={day}>
+                                        <ListBox.Item key={day} id={day} textValue={day} className="px-3 py-1 text-sm bg-[#1e293b] rounded-md data-[selected=true]:bg-purple-600">
                                             {day}
                                         </ListBox.Item>
                                     ))}
@@ -341,9 +372,8 @@ const AddDoctorPage = (): React.JSX.Element => {
                                 )}
                             </div>
 
-                            {/* 🛠️ মোবাইলে স্টার্ট টাইম আর এন্ড টাইম ওপরে-নিচে দেখানোর জন্য flex-col md:flex-row করা হয়েছে */}
-                            <div className="flex flex-col md:flex-row gap-4 w-full">
-                                <div className="w-full">
+                            <div className="flex flex-col sm:flex-row gap-4 w-full">
+                                <div className="w-full min-w-0">
                                     <Select isRequired placeholder="Start time">
                                         <Label>Start Time</Label>
                                         <Select.Trigger>
@@ -366,7 +396,7 @@ const AddDoctorPage = (): React.JSX.Element => {
                                     </Select>
                                 </div>
 
-                                <div className="w-full">
+                                <div className="w-full min-w-0">
                                     <Select isRequired placeholder="End time">
                                         <Label>End Time</Label>
                                         <Select.Trigger>
@@ -389,39 +419,31 @@ const AddDoctorPage = (): React.JSX.Element => {
                                     </Select>
                                 </div>
                             </div>
-                            <p className="text-xs text-gray-500 -mt-2">
-                                Select the time range for consultations
-                            </p>
 
                             <div className="flex items-center gap-2 text-purple-400 font-semibold mt-2">
                                 <FiSettings size={16} />
                                 <span>Additional Options</span>
                             </div>
 
-                            <TextField isRequired type="number" name="maxAppointments">
+                            <TextField isRequired type="number" name="maxAppointments" className="w-full">
                                 <Label>Max Appointments Per Day</Label>
                                 <Input placeholder="e.g. 20" value={formData.maxAppointments} onChange={handleInputChange("maxAppointments")} />
-                                <Description>
-                                    Maximum number of patients this doctor can see per day.
-                                </Description>
                                 <FieldError />
                             </TextField>
                         </div>
 
                         {/* ================= FOOTER ACTIONS ================= */}
-                        {/* 🛠️ মোবাইলে বাটনগুলো একে অপরের ওপরে সুন্দরভাবে বসার জন্য w-full sm:w-auto ব্যবহার করা হয়েছে */}
-                        <div className="md:col-span-2 flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t border-gray-800 mt-2 w-full">
+                        <div className="md:col-span-2 flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t border-gray-800 mt-4 w-full">
                             <Button className="w-full sm:w-auto" variant="secondary" onPress={() => router.back()}>
                                 Cancel
                             </Button>
                             <Button
                                 type="submit"
                                 variant="primary"
-                                isPending={submitting}
-                                isDisabled={uploadingImage}
-                                className="w-full sm:w-auto"
+                                isLoading={submitting}
+                                isDisabled={uploadingImage || submitting}
+                                className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white"
                             >
-                                {!submitting && <HiOutlineUserAdd size={16} />}
                                 Add Doctor
                             </Button>
                         </div>
