@@ -2,6 +2,7 @@
 
 import DoctorCard from "@/components/DoctorCard";
 import { useEffect, useMemo, useState } from "react";
+import { FiSearch } from "react-icons/fi";
 
 interface Doctor {
   _id: string;
@@ -97,15 +98,22 @@ const Doctors = () => {
     <div className=" container mx-auto p-4 sm:p-6 lg:p-8">
       <h1 className="text-2xl font-bold mb-6">Doctors</h1>
 
-      {/* ---- Search + Filter + Sort বার ---- */}
+      {/* ---- Search + Filter + Sort  ---- */}
       <div className="flex flex-col md:flex-row gap-3 mb-6">
-        <input
-          type="text"
-          placeholder="Search by name or specialization..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full md:flex-1 rounded-lg border border-gray-700 bg-[#1e293b] text-white px-4 py-2 text-sm outline-none focus:border-blue-500"
-        />
+        
+       <div className="relative w-full md:flex-1">
+          <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <FiSearch className="h-5 w-5 text-gray-400" />
+          </span>
+          <input
+            type="text"
+            placeholder="Search by name or specialization..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          
+            className="w-full rounded-lg border border-gray-700 bg-[#1e293b] text-white pl-10 pr-4 py-2 text-sm outline-none focus:border-blue-500"
+          />
+        </div>
 
         <select
           value={specialityFilter}

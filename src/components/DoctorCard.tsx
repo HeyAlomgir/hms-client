@@ -89,6 +89,11 @@ const DoctorCard = ({ doctor }: DoctorCardProps): React.JSX.Element => {
                     <span className="text-xs font-medium text-blue-400 mt-0.5">
                         {doctor.specialization}
                     </span>
+                    {doctor.degree && (
+                        <span className="text-[11px] text-neutral-500 mt-0.5 truncate">
+                            {doctor.degree}
+                        </span>
+                    )}
                 </div>
             </Card.Header>
 
@@ -125,7 +130,9 @@ const DoctorCard = ({ doctor }: DoctorCardProps): React.JSX.Element => {
                     <div className="col-span-2 flex items-center gap-2">
                         <FiClock size={15} className="text-blue-400 flex-shrink-0" />
                         <p className="text-sm text-white">
-                            {doctor.startTime} - {doctor.endTime}
+                            {doctor.startTime && doctor.endTime
+                                ? `${doctor.startTime} - ${doctor.endTime}`
+                                : "Time not set"}
                         </p>
                     </div>
                     <div className="col-span-2 flex items-start gap-2">

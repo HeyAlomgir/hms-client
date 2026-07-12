@@ -149,7 +149,7 @@ const AddDoctorPage = (): React.JSX.Element => {
                 body: JSON.stringify(formData),
             });
 
-            // 💡 ফিক্স: ডাটাবেজে ডাটা যেহেতু সেভ হচ্ছে, তাই res.ok হওয়া মাত্রই আমরা সফল ধরে নেব
+            // 💡 ফিক্স: ডাটাবেজে ডাটা যেহেতু সেভ হচ্ছে, তাই res.ok হওয়া মাত্রই আমরা সফল ধরে নেব
             if (res.ok) {
                 toast.success("Doctor added successfully!", { id: loadingToast });
 
@@ -176,14 +176,14 @@ const AddDoctorPage = (): React.JSX.Element => {
                 }, 1000);
 
             } else {
-                // যদি রেসপন্স ok না হয় (যেমন ৪০০ বা ৫০০ এরর)
+                // যদি রেসপন্স ok না হয় (যেমন ৪০০ বা ৫০০ এরর)
                 throw new Error("Server responded with an error status.");
             }
         } catch (err: any) {
             // কোনো কারণে রেসপন্স রিড করতে সমস্যা হলেও যেহেতু ডাটা এড হচ্ছে, আমরা ব্যাকআপ চেক রাখছি
             console.error("Fetch response parsing error:", err);
 
-            // সেফটি নেট: ডাটা অলরেডি সেভ হয়ে থাকলে এটিকে সাকসেস হিসেবেই হ্যান্ডেল করুন
+            // সেফটি নেট: ডাটা অলরেডি সেভ হয়ে থাকলে এটিকে সাকসেস হিসেবেই হ্যান্ডেল করুন
             toast.success("Doctor added successfully!", { id: loadingToast });
             setFormData({
                 name: "", email: "", specialization: "", degree: "", description: "",
@@ -196,7 +196,7 @@ const AddDoctorPage = (): React.JSX.Element => {
                 router.push("/dashboard/admin/all-doctors");
             }, 1000);
         } finally {
-
+            // বাটন লোডিং স্টেট থেকে বের করার জন্য এটি অবশ্যই রান করবে
             setSubmitting(false);
         }
     };
@@ -221,7 +221,7 @@ const AddDoctorPage = (): React.JSX.Element => {
                 <Separator className="bg-gray-800" />
 
                 <Card.Content className="p-4 md:p-6">
-                    {/*grid layout*/}
+                    {/* গ্রিড লেআউট ফিক্সড করা হয়েছে w-full এবং min-w-0 দিয়ে যাতে স্ক্রিন না কাটে */}
                     <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full min-w-0">
 
                         {/* ================= LEFT COLUMN ================= */}
@@ -373,19 +373,21 @@ const AddDoctorPage = (): React.JSX.Element => {
                             </div>
 
                             <div className="flex flex-col sm:flex-row gap-4 w-full">
+                                {/* 💡 ফিক্স: selectedKey আর onSelectionChange এখন Select এ, ভেতরের ListBox এ না */}
                                 <div className="w-full min-w-0">
-                                    <Select isRequired placeholder="Start time">
+                                    <Select
+                                        isRequired
+                                        placeholder="Start time"
+                                        selectedKey={formData.startTime}
+                                        onSelectionChange={(key) => handleSelectChange("startTime")(key)}
+                                    >
                                         <Label>Start Time</Label>
                                         <Select.Trigger>
                                             <Select.Value />
                                             <Select.Indicator />
                                         </Select.Trigger>
                                         <Select.Popover>
-                                            <ListBox
-                                                selectionMode="single"
-                                                selectedKeys={formData.startTime ? new Set([formData.startTime]) : new Set()}
-                                                onSelectionChange={(keys) => handleSelectChange("startTime")(Array.from(keys)[0] || null)}
-                                            >
+                                            <ListBox>
                                                 {TIME_SLOTS.map((t) => (
                                                     <ListBox.Item key={t} id={t} textValue={t}>
                                                         {t}
@@ -397,18 +399,19 @@ const AddDoctorPage = (): React.JSX.Element => {
                                 </div>
 
                                 <div className="w-full min-w-0">
-                                    <Select isRequired placeholder="End time">
+                                    <Select
+                                        isRequired
+                                        placeholder="End time"
+                                        selectedKey={formData.endTime}
+                                        onSelectionChange={(key) => handleSelectChange("endTime")(key)}
+                                    >
                                         <Label>End Time</Label>
                                         <Select.Trigger>
                                             <Select.Value />
                                             <Select.Indicator />
                                         </Select.Trigger>
                                         <Select.Popover>
-                                            <ListBox
-                                                selectionMode="single"
-                                                selectedKeys={formData.endTime ? new Set([formData.endTime]) : new Set()}
-                                                onSelectionChange={(keys) => handleSelectChange("endTime")(Array.from(keys)[0] || null)}
-                                            >
+                                            <ListBox>
                                                 {TIME_SLOTS.map((t) => (
                                                     <ListBox.Item key={t} id={t} textValue={t}>
                                                         {t}
