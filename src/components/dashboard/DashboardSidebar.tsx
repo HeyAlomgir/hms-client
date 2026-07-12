@@ -12,14 +12,14 @@ import { IoIosAddCircle } from "react-icons/io";
 import { SiSpringCreators } from "react-icons/si";
 import { TbAsset } from "react-icons/tb";
 
-// ১. প্রতিটি মেনু আইটেমের টাইপ স্ট্রাকচার ডিফাইন করা হয়েছে
+
 interface SidebarItem {
   icon: React.ComponentType<{ className?: string }>;
   label: string;
   link: string;
 }
 
-// ২. রোল অনুযায়ী ড্যাশবোর্ড আইটেমগুলোর টাইপ ম্যাপিং করা হয়েছে
+// user role onujai map
 interface DashboardItemsMap {
   [key: string]: SidebarItem[];
 }
@@ -30,7 +30,7 @@ export async function DashboardSidebar(): Promise<React.JSX.Element> {
     });
     const user = session?.user;
     
-    // রোল টাইপ সেফটি এবং ফলব্যাক চেক
+    // role type
     const current = user?.role || "user";
     const role = current.toLowerCase();
 
@@ -56,11 +56,11 @@ export async function DashboardSidebar(): Promise<React.JSX.Element> {
             { icon: GoReport, label: "Reports ", link: '/dashboard/admin/report' },
             { icon: ChartAreaStacked, label: "Analytics", link: '/dashboard/admin' },
         ],
-        // একটি ডিফল্ট বা এম্পটি রোল লিস্ট ডিফাইন করা হয়েছে সেফটির জন্য
+     
         user: [] 
     };
 
-    // রোল ম্যাচ না করলে অটোমেটিক ফলব্যাক হিসেবে খালি বা জেনারেল ইউজার অ্যারে পাবে
+    // 
     const navItems = dashboardItems[role] ?? dashboardItems["user"];
 
     return (

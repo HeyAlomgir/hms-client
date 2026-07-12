@@ -1,7 +1,7 @@
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
-import React from "react"; // React ইমপোর্ট করা হয়েছে ReactNode টাইপের জন্য
+import React from "react"; 
 
-// ১. children-এর জন্য ইন্টারফেস ডিফাইন করা হয়েছে
+
 interface DashBoardLayoutProps {
   children: React.ReactNode;
 }
