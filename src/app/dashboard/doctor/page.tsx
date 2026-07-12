@@ -1,9 +1,18 @@
-const page = () => {
+"use client"
+
+import { useEffect } from "react";
+
+
+const DoctorPage = () => {
+
+
+
   return (
     <div>
-Doctor page
+      Doctor page
+
     </div>
   );
 };
 
-export default page;
+export default DoctorPage;
