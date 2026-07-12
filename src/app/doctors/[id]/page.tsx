@@ -15,6 +15,9 @@ import {
 import { FaStar, FaRegStar } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
+import { Elements } from "@stripe/react-stripe-js";
+import PaymentForm from "@/components/PaymentForm";
+import { stripePromise } from "@/lib/stripe";
 
 // --- INTERFACES FOR TYPES ---
 interface Doctor {
@@ -361,9 +364,9 @@ const DoctorDetails = (): React.JSX.Element => {
                 </div>
             </div>
 
-            <Button className="w-full mt-6 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-medium">
-                Book Appointment
-            </Button>
+            <Elements stripe={stripePromise}>
+                <PaymentForm doctor={doctor} />
+            </Elements>
 
             {/* Reviews section */}
             <div className="mt-10">
