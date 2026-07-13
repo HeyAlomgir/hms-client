@@ -2,6 +2,7 @@
 
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function PaymentForm({ doctor }: any) {
     const stripe = useStripe();
@@ -16,24 +17,24 @@ export default function PaymentForm({ doctor }: any) {
 
         setLoading(true);
 
-        // 🔥 1. create payment intent
+        //  1. create payment intent
         const res = await fetch("http://localhost:5000/api/create-payment-intent", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                amount: Math.round(Number(doctor.consultationFee) * 100), // dollar/taka কে ছোট একক (cents/poisha) এ কনভার্ট
+                amount: Math.round(Number(doctor.consultationFee) * 100), 
             }),
         });
 
         const data = await res.json();
 
 
-        // 💡 ফিক্স: response fail করলে এখানেই থামিয়ে দাও, Stripe পর্যন্ত যেতে দিও না
+     
         if (!res.ok || !data.clientSecret) {
             console.error("Payment intent creation failed:", data);
-            alert(data.message || "Payment শুরু করা যায়নি। আবার চেষ্টা করো।");
+            toast.success(data.message || "Payment শুরু করা যায়নি। আবার চেষ্টা করো।")
             setLoading(false);
             return;
         }
@@ -54,7 +55,7 @@ export default function PaymentForm({ doctor }: any) {
                 },
                 body: JSON.stringify({
                     doctorId: doctor._id,
-                    patientId: "USER_ID", // পরে auth থেকে নিবি
+                    patientId: "USER_ID", 
                     date: new Date(),
                 }),
             });
@@ -69,13 +70,13 @@ export default function PaymentForm({ doctor }: any) {
         <form onSubmit={handleSubmit} className="space-y-4">
             <CardElement
                 options={{
-                    hidePostalCode: true, // ZIP/postal code ফিল্ড লুকিয়ে ফেলবে, না হলে এক্সট্রা জায়গা লাগে
+                    hidePostalCode: true,
                     style: {
                         base: {
                             fontSize: "16px",
-                            color: "#ffffff", // ইনপুট টেক্সট সাদা, dark background এ ভালো দেখাবে
+                            color: "#ffffff", 
                             "::placeholder": {
-                                color: "#94a3b8", // হালকা ধূসর placeholder
+                                color: "#94a3b8", 
                             },
                             iconColor: "#60a5fa",
                         },
