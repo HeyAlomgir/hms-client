@@ -27,7 +27,7 @@ interface Doctor {
     specialization: string;
     degree?: string;
     description: string;
-    image: string;
+    image?: string;
     consultationFee: string | number;
     workingDays: string[];
     startTime: string | null;
