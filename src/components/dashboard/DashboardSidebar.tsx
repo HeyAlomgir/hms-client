@@ -8,7 +8,6 @@ import React from "react";
 import { BiMoney } from "react-icons/bi";
 import { GiAnatomy } from "react-icons/gi";
 import { GoReport } from "react-icons/go";
-import { IoIosAddCircle } from "react-icons/io";
 import { SiSpringCreators } from "react-icons/si";
 import { TbAsset } from "react-icons/tb";
 
@@ -40,8 +39,7 @@ export async function DashboardSidebar(): Promise<React.JSX.Element> {
     const dashboardItems: DashboardItemsMap = {
         patient: [
             { icon: GiAnatomy, label: "My Appointments", link: '/dashboard/patient/my-appointments' },
-            { icon: GiAnatomy, label: "Medical Records", link: '/dashboard/patient/medical-records' },
-            { icon: GiAnatomy, label: "Profile", link: '/dashboard/patient/profile' },
+           
         ],
         doctor: [
             { icon: SiSpringCreators, label: "Dashboard Home", link: '/dashboard/doctor' },
