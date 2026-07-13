@@ -87,13 +87,16 @@ const getInitials = (name?: string | null): string =>
         .slice(0, 2)
         .toUpperCase() || "?";
 
+
+const DAY_NAME_MAP = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
 // --- MAIN COMPONENT ---
 const DoctorDetails = (): React.JSX.Element => {
     const params = useParams();
     const id = params?.id as string; // useParams থেকে id-কে string হিসেবে নিশ্চিত করা হলো
     const router = useRouter();
 
-    // authClient সেশন মেম্বার টাইপ নির্ধারণ
+    // authClient
     const { data: session, isPending: sessionLoading } = authClient.useSession();
     const user = session?.user;
 
@@ -111,6 +114,9 @@ const DoctorDetails = (): React.JSX.Element => {
     const [hoverRating, setHoverRating] = useState<number>(0);
     const [comment, setComment] = useState<string>("");
     const [submitting, setSubmitting] = useState<boolean>(false);
+
+    // 🔥 নতুন: appointment date নির্বাচন করার জন্য state
+    const [selectedDate, setSelectedDate] = useState<string>("");
 
     const loadDoctor = async (): Promise<void> => {
         try {
@@ -246,6 +252,15 @@ const DoctorDetails = (): React.JSX.Element => {
         ).toFixed(1)
         : null;
 
+    // New: doctor Date selected available helper
+    const isDoctorAvailableOnDate = (dateStr: string): boolean => {
+        if (!dateStr || !doctor?.workingDays?.length) return false;
+        const dayIndex = new Date(dateStr).getDay(); // 0 (Sun) - 6 (Sat)
+        return doctor.workingDays.includes(DAY_NAME_MAP[dayIndex]);
+    };
+
+    const todayStr = new Date().toISOString().split("T")[0];
+
     if (loading) {
         return <div className="p-6 text-center text-white">Loading...</div>;
     }
@@ -364,9 +379,36 @@ const DoctorDetails = (): React.JSX.Element => {
                 </div>
             </div>
 
-            <Elements stripe={stripePromise}>
-                <PaymentForm doctor={doctor} />
-            </Elements>
+            {/* New: Appointment date selet + Payment section */}
+            <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5">
+                <label className="block text-sm font-medium text-neutral-300 mb-2">
+                    Select Appointment Date
+                </label>
+                <input
+                    type="date"
+                    min={todayStr}
+                    value={selectedDate}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                    className="w-full sm:w-64 rounded-lg bg-neutral-900 border border-white/10 p-2.5 text-sm
+                               text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                />
+
+                {selectedDate && !isDoctorAvailableOnDate(selectedDate) && (
+                    <p className="text-red-400 text-xs mt-2">
+                        Doctor is not available on this day. Available days: {doctor.workingDays?.join(", ")}
+                    </p>
+                )}
+
+                <div className="mt-4">
+                    <Elements stripe={stripePromise}>
+                        <PaymentForm
+                            doctor={doctor}
+                            selectedDate={selectedDate}
+                            isDateValid={!!selectedDate && isDoctorAvailableOnDate(selectedDate)}
+                        />
+                    </Elements>
+                </div>
+            </div>
 
             {/* Reviews section */}
             <div className="mt-10">
