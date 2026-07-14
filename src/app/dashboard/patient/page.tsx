@@ -23,6 +23,7 @@ interface Appointment {
     name: string;
     specialization?: string;
     consultationFee?: number | string;
+    image?:string;
   };
 }
 
@@ -42,6 +43,7 @@ export default function PatientDashboard() {
   console.log("userID", userId)
 
   useEffect(() => {
+    if(!userId)return;
     const fetchDashboardData = async () => {
       try {
         const res = await fetch(`http://localhost:5000/api/my-appointments/${userId}`);

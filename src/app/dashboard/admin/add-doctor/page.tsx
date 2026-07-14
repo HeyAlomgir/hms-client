@@ -130,76 +130,76 @@ const AddDoctorPage = (): React.JSX.Element => {
         setFormData((prev) => ({ ...prev, image: "" }));
     };
 
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        e.stopPropagation();
+const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-        if (!formData.name || !formData.email || !formData.specialization || !formData.degree) {
-            toast.error("Please fill in all the required fields.");
-            return;
-        }
+    if (!formData.name || !formData.email || !formData.specialization || !formData.degree) {
+        toast.error("Please fill in all the required fields.");
+        return;
+    }
 
-        setSubmitting(true);
-        const loadingToast = toast.loading("Adding doctor...");
+    setSubmitting(true);
+    const loadingToast = toast.loading("Adding doctor...");
 
-        try {
-            const res = await fetch("http://localhost:5000/api/doctors", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData),
-            });
+    try {
+        // 🔥 এখন Express-এ direct না, Next.js API route-এ POST হচ্ছে
+        const res = await fetch("/api/admin/create-doctor", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+        });
 
-            // 💡 ফিক্স: ডাটাবেজে ডাটা যেহেতু সেভ হচ্ছে, তাই res.ok হওয়া মাত্রই আমরা সফল ধরে নেব
-            if (res.ok) {
-                toast.success("Doctor added successfully!", { id: loadingToast });
+        const data = await res.json();
 
-                // সঙ্গে সঙ্গে ফর্ম রিসেট করুন
-                setFormData({
-                    name: "",
-                    email: "",
-                    specialization: "",
-                    degree: "",
-                    description: "",
-                    image: "",
-                    consultationFee: "",
-                    workingDays: [],
-                    startTime: null,
-                    endTime: null,
-                    maxAppointments: "",
-                    consultationType: "in-person",
-                });
-                setImagePreview(null);
+        if (res.ok && data.success) {
+            // 🔥 admin-কে temp password দেখানো, যাতে doctor-কে শেয়ার করতে পারে
+            toast.success(
+                (t) => (
+                    <div className="flex flex-col gap-1">
+                        <span>Doctor added successfully!</span>
+                        <span className="text-xs text-gray-300">
+                            Login email: <b>{formData.email}</b>
+                        </span>
+                        <span className="text-xs text-gray-300">
+                            Temp password: <b>{data.tempPassword}</b>
+                        </span>
+                    </div>
+                ),
+                { id: loadingToast, duration: 8000 }
+            );
 
-                // ১ সেকেন্ড পর ড্যাশবোর্ডে রিডাইরেক্ট হবে
-                setTimeout(() => {
-                    router.push("/dashboard/admin/all-doctors");
-                }, 1000);
-
-            } else {
-                // যদি রেসপন্স ok না হয় (যেমন ৪০০ বা ৫০০ এরর)
-                throw new Error("Server responded with an error status.");
-            }
-        } catch (err: any) {
-            // কোনো কারণে রেসপন্স রিড করতে সমস্যা হলেও যেহেতু ডাটা এড হচ্ছে, আমরা ব্যাকআপ চেক রাখছি
-            console.error("Fetch response parsing error:", err);
-
-            // সেফটি নেট: ডাটা অলরেডি সেভ হয়ে থাকলে এটিকে সাকসেস হিসেবেই হ্যান্ডেল করুন
-            toast.success("Doctor added successfully!", { id: loadingToast });
             setFormData({
-                name: "", email: "", specialization: "", degree: "", description: "",
-                image: "", consultationFee: "", workingDays: [], startTime: null, endTime: null,
-                maxAppointments: "", consultationType: "in-person"
+                name: "",
+                email: "",
+                specialization: "",
+                degree: "",
+                description: "",
+                image: "",
+                consultationFee: "",
+                workingDays: [],
+                startTime: null,
+                endTime: null,
+                maxAppointments: "",
+                consultationType: "in-person",
             });
             setImagePreview(null);
 
             setTimeout(() => {
                 router.push("/dashboard/admin/all-doctors");
-            }, 1000);
-        } finally {
-            // বাটন লোডিং স্টেট থেকে বের করার জন্য এটি অবশ্যই রান করবে
-            setSubmitting(false);
+            }, 3000); // temp password পড়ার জন্য একটু বেশি সময় দেওয়া হলো
+        } else {
+            throw new Error(data.message || "Server responded with an error status.");
         }
-    };
+    } catch (err: any) {
+        console.error("Error adding doctor:", err);
+        toast.error(err.message || "Failed to add doctor. Please try again.", { id: loadingToast });
+        // 🔥 আগের ভার্সনের মতো এখানে "সাফল্য ধরে নেওয়া" যাবে না —
+        // কারণ এখন যদি সত্যিই error হয় (যেমন email already exists), doctor login-ই করতে পারবে না
+    } finally {
+        setSubmitting(false);
+    }
+};
 
     return (
         <div className="w-full max-w-6xl mx-auto px-4 py-6 box-border overflow-hidden">
