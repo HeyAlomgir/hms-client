@@ -48,7 +48,7 @@ export async function DashboardSidebar(): Promise<React.JSX.Element> {
             { icon: GiDoctorFace, label: "Appointments", link: '/dashboard/doctor/appointments' },
         ],
         admin: [
-            { icon: Person, label: "All User", link: '/dashboard/admin/all-user' },
+            { icon: Person, label: "All Patients", link: '/dashboard/admin/all-patiens' },
             { icon: TbAsset, label: "All Doctors", link: '/dashboard/admin/all-doctors' },
             { icon: BiMoney, label: "All Appointments", link: '/dashboard/admin/all-appointments' },
             { icon: GoReport, label: "Reports ", link: '/dashboard/admin/report' },

@@ -42,7 +42,8 @@ interface DoctorFormData {
 }
 
 export default function DoctorProfilePage() {
-    const { data: session, isPending } = authClient.useSession();
+    // 🔥 refetch যোগ করা হয়েছে, session রিফ্রেশ করার জন্য
+    const { data: session, isPending, refetch } = authClient.useSession();
 
     const [doctorId, setDoctorId] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
@@ -191,6 +192,14 @@ export default function DoctorProfilePage() {
             if (!res.ok) throw new Error();
 
             toast.success("Profile updated successfully!", { id: toastId });
+
+            // 🔥 session রিফ্রেশ করা, যাতে navbar-এ নতুন নাম/ছবি সাথে সাথে দেখা যায়
+            if (typeof refetch === "function") {
+                await refetch();
+            } else {
+                // fallback, যদি refetch না থাকে এই Better Auth ভার্সনে
+                await authClient.getSession();
+            }
         } catch {
             toast.error("Failed to update profile.", { id: toastId });
         } finally {
