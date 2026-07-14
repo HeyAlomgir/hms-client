@@ -65,7 +65,7 @@ export default function DoctorAppointments() {
     const loadAppointments = async () => {
         if (!session?.user?.id) return;
         try {
-            // ১. প্রথমে userId দিয়ে doctor profile-এর _id বের করা
+            // 1. first userId to doctor profile- _id find
             const doctorRes = await fetch(
                 `${process.env.NEXT_PUBLIC_API_URL}/api/doctors/by-user/${session.user.id}`
             );
@@ -79,7 +79,7 @@ export default function DoctorAppointments() {
 
             const doctorId = doctorData.data._id;
 
-            // ২. সেই doctorId দিয়ে appointments আনা
+            // 2.she doctorId to appointments
             const res = await fetch(
                 `${process.env.NEXT_PUBLIC_API_URL}/api/doctor-appointments/${doctorId}`
             );

@@ -7,7 +7,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import { BiLogOut } from "react-icons/bi";
-import { CgProfile } from "react-icons/cg";
 import { MdDashboard } from "react-icons/md";
 
 interface CustomUser {
@@ -24,6 +23,7 @@ const Navbar: React.FC = () => {
   const { data: session } = authClient.useSession();
 
   const user = session?.user as CustomUser | undefined;
+  console.log(user?.role)
 
   const pathName = usePathname();
 
@@ -33,6 +33,16 @@ const Navbar: React.FC = () => {
 
   const handleSignOut = async (): Promise<void> => {
     await authClient.signOut();
+  };
+
+
+  const getAppointmentLink = () => {
+    if (!user) return "/signin"; 
+    
+   
+    if (user.role === "admin") return "/dashboard/admin/all-appointments";
+    if (user.role === "doctor") return "/dashboard/doctor/appointments";
+    if (user.role === "patient") return "/dashboard/patient/my-appointments";
   };
 
   return (
@@ -97,7 +107,7 @@ const Navbar: React.FC = () => {
               <Link href="/doctors">Doctors</Link>
             </li>
             <li>
-              <Link href="/appointments">Appointments</Link>
+              <Link href={getAppointmentLink()}>Appointments</Link>
             </li>
           </ul>
 
@@ -155,15 +165,7 @@ const Navbar: React.FC = () => {
                       </Link>
                     </Dropdown.Item>
 
-                    <Dropdown.Item id="profile" textValue="Profile">
-                      <Link
-                        className="flex items-center gap-2 text-slate-200"
-                        href={`/dashboard/${user?.role || "patient"}/profile`}
-                      >
-                        <CgProfile className="text-teal-400" />
-                        <Label>Profile</Label>
-                      </Link>
-                    </Dropdown.Item>
+                    
 
                     <Dropdown.Item
                       id="logout"
@@ -197,7 +199,7 @@ const Navbar: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/appointments" className="block py-2" onClick={() => setIsMenuOpen(false)}>
+                <Link href={getAppointmentLink()} className="block py-2" onClick={() => setIsMenuOpen(false)}>
                   Appointments
                 </Link>
               </li>
