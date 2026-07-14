@@ -1,12 +1,13 @@
 import { auth } from "@/lib/auth";
-import { Bars, Bell, ChartAreaStacked, Envelope, Gear, House, Magnifier, Person } from "@gravity-ui/icons";
+import { Bars, ChartAreaStacked,  House, Person } from "@gravity-ui/icons";
 import { Button, Drawer } from "@heroui/react";
 import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { BiMoney } from "react-icons/bi";
-import { GiAnatomy } from "react-icons/gi";
+import { FaUserDoctor } from "react-icons/fa6";
+import { GiAnatomy, GiDoctorFace } from "react-icons/gi";
 import { GoReport } from "react-icons/go";
 import { SiSpringCreators } from "react-icons/si";
 import { TbAsset } from "react-icons/tb";
@@ -43,9 +44,8 @@ export async function DashboardSidebar(): Promise<React.JSX.Element> {
         ],
         doctor: [
             { icon: SiSpringCreators, label: "Dashboard Home", link: '/dashboard/doctor' },
-            { icon: GiAnatomy, label: "My Patients", link: '/dashboard/doctor/my-patients' },
-            { icon: GiAnatomy, label: "Appointments", link: '/dashboard/doctor/appointments' },
-            { icon: GiAnatomy, label: "Prescription", link: '/dashboard/doctor/prescription' },
+            { icon: FaUserDoctor, label: "Profile", link: '/dashboard/doctor/my-profile' },
+            { icon: GiDoctorFace, label: "Appointments", link: '/dashboard/doctor/appointments' },
         ],
         admin: [
             { icon: Person, label: "All User", link: '/dashboard/admin/all-user' },
