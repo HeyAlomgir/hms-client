@@ -23,13 +23,17 @@ const Navbar: React.FC = () => {
   const { data: session } = authClient.useSession();
 
   const user = session?.user as CustomUser | undefined;
-  console.log(user?.role)
+  // console.log(user?.role)
 
   const pathName = usePathname();
+  console.log(pathName)
 
   if (pathName.includes("dashboard")) {
     return null;
   }
+
+
+
 
   const handleSignOut = async (): Promise<void> => {
     await authClient.signOut();
@@ -44,6 +48,17 @@ const Navbar: React.FC = () => {
     if (user.role === "doctor") return "/dashboard/doctor/appointments";
     if (user.role === "patient") return "/dashboard/patient/my-appointments";
   };
+
+
+    const getlinkHome =(`${pathName === "/" 
+    ?
+    "w-full py-3 px-3 bg-gradient-to-r from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700 disabled:opacity-50 text-white font-medium rounded-lg text-sm transition-all mt-4 shadow-lg shadow-teal-500/10":""
+  }`)
+    const getlinkDoctors =(`${pathName === "/doctors" 
+    ?
+    "w-full py-3 px-3 bg-gradient-to-r from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700 disabled:opacity-50 text-white font-medium rounded-lg text-sm transition-all mt-4 shadow-lg shadow-teal-500/10":""
+  }`)
+ 
 
   return (
     <div>
@@ -101,10 +116,10 @@ const Navbar: React.FC = () => {
           </div>
           <ul className="hidden lg:block items-center gap-6 lg:flex text-slate-300 font-medium text-sm">
             <li>
-              <Link href="/">Home</Link>
+              <Link href="/" className={getlinkHome} >Home</Link>
             </li>
             <li>
-              <Link href="/doctors">Doctors</Link>
+              <Link href="/doctors" className={getlinkDoctors}>Doctors</Link>
             </li>
             <li>
               <Link href={getAppointmentLink()}>Appointments</Link>
@@ -189,12 +204,12 @@ const Navbar: React.FC = () => {
           <div className="border-t border-slate-800 lg:hidden bg-[#0f172a]">
             <ul className="flex flex-col gap-2 p-4 text-slate-300 font-medium">
               <li>
-                <Link href="/" className="block py-2" onClick={() => setIsMenuOpen(false)}>
+                <Link href="/" className={getlinkHome} onClick={() => setIsMenuOpen(false)}>
                   Home
                 </Link>
               </li>
               <li>
-                <Link href="/doctors" className="block py-2" onClick={() => setIsMenuOpen(false)}>
+                <Link href="/doctors" className={`${getlinkDoctors} `} onClick={() => setIsMenuOpen(false)}>
                   Doctors
                 </Link>
               </li>

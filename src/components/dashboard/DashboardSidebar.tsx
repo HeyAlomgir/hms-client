@@ -8,7 +8,6 @@ import React from "react";
 import { BiMoney } from "react-icons/bi";
 import { FaUserDoctor } from "react-icons/fa6";
 import { GiAnatomy, GiDoctorFace } from "react-icons/gi";
-import { GoReport } from "react-icons/go";
 import { SiSpringCreators } from "react-icons/si";
 import { TbAsset } from "react-icons/tb";
 
@@ -40,6 +39,8 @@ export async function DashboardSidebar(): Promise<React.JSX.Element> {
     const dashboardItems: DashboardItemsMap = {
         patient: [
             { icon: GiAnatomy, label: "My Appointments", link: '/dashboard/patient/my-appointments' },
+
+           { icon: ChartAreaStacked, label: "Analytics", link: '/dashboard/patient' },
            
         ],
         doctor: [
@@ -59,6 +60,10 @@ export async function DashboardSidebar(): Promise<React.JSX.Element> {
 
     // 
     const navItems = dashboardItems[role] ?? dashboardItems["user"];
+
+
+
+
 
     return (
         <div className="flex flex-col h-full justify-between">

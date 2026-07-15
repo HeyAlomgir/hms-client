@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import React from 'react'; // React ইমপোর্ট করা হয়েছে টাইপের জন্য
+import React from 'react';
 import { Button } from '@heroui/react';
 
 export default function NotFound(): React.JSX.Element {

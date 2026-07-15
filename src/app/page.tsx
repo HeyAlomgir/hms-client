@@ -1,13 +1,18 @@
+"use client";
+
+import Hero from "@/components/Hero";
 
 
-export default async function Home() {
-  await new Promise((resolve) => setTimeout(resolve, 3000));
-  return (
-    <div>
-   
-      <h1 className="text-center mt-10 text-3xl">
-        Welcome to Hospital System
-      </h1>
-    </div>
-  );
+export default function HomePage() {
+  
+
+    return (
+        <div className=" min-h-screen bg-neutral-950 text-white">
+
+            {/* ================= HERO BANNER SLIDER ================= */}
+            <section className="w-full px-3 sm:px-6 pt-6 sm:pt-8">
+                <Hero/>
+            </section>
+        </div>
+    );
 }
