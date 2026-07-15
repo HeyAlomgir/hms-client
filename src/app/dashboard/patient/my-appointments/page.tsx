@@ -74,7 +74,7 @@ export default function PatientDashboard() {
         if (isPending) return;
         if (!session?.user?.id) return;
 
-        fetch(`http://localhost:5000/api/my-appointments/${session.user.id}`)
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/my-appointments/${session.user.id}`)
             .then((res) => res.json())
             .then((data) => setAppointments(data.data || []))
             .finally(() => setLoadingData(false));

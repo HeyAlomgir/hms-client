@@ -93,7 +93,7 @@ const DAY_NAME_MAP = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 // --- MAIN COMPONENT ---
 const DoctorDetails = (): React.JSX.Element => {
     const params = useParams();
-    const id = params?.id as string; // useParams থেকে id-কে string হিসেবে নিশ্চিত করা হলো
+    const id = params?.id as string; 
     const router = useRouter();
 
     // authClient
@@ -115,12 +115,12 @@ const DoctorDetails = (): React.JSX.Element => {
     const [comment, setComment] = useState<string>("");
     const [submitting, setSubmitting] = useState<boolean>(false);
 
-    // 🔥 নতুন: appointment date নির্বাচন করার জন্য state
+
     const [selectedDate, setSelectedDate] = useState<string>("");
 
     const loadDoctor = async (): Promise<void> => {
         try {
-            const res = await fetch(`http://localhost:5000/api/doctors/${id}`);
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/doctors/${id}`);
             const data: Doctor = await res.json();
             setDoctor(data);
         } catch (err) {
@@ -132,7 +132,7 @@ const DoctorDetails = (): React.JSX.Element => {
 
     const loadReviews = async (): Promise<void> => {
         try {
-            const res = await fetch(`http://localhost:5000/api/reviews/${id}`);
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reviews/${id}`);
             const data: Review[] = await res.json();
             setReviews(data);
         } catch (err) {
@@ -146,7 +146,7 @@ const DoctorDetails = (): React.JSX.Element => {
         if (!user?.email) return;
         try {
             const res = await fetch(
-                `http://localhost:5000/api/bookmarks/${user.email}`
+                `${process.env.NEXT_PUBLIC_API_URL}/api/bookmarks/${user.email}`
             );
             const data: Bookmark[] = await res.json();
             const found = data.find((b) => b.doctorId === id);
@@ -181,14 +181,14 @@ const DoctorDetails = (): React.JSX.Element => {
         setBookmarkLoading(true);
         try {
             if (isBookmarked && bookmarkId) {
-                await fetch(`http://localhost:5000/api/bookmarks/${bookmarkId}`, {
+                await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/bookmarks/${bookmarkId}`, {
                     method: "DELETE",
                 });
                 setIsBookmarked(false);
                 setBookmarkId(null);
                 toast.success("Removed from saved doctors");
             } else {
-                const res = await fetch(`http://localhost:5000/api/bookmarks`, {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/bookmarks`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ doctorId: id, userEmail: user.email }),
@@ -221,7 +221,7 @@ const DoctorDetails = (): React.JSX.Element => {
         setSubmitting(true);
         const toastId = toast.loading("Submitting your review...");
         try {
-            const res = await fetch(`http://localhost:5000/api/reviews`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reviews`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

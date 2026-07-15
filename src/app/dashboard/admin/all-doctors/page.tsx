@@ -19,7 +19,7 @@ export default function AllDoctorPage(): React.JSX.Element {
 
   // 👉 Fetch Doctors
   useEffect(() => {
-    fetch("http://localhost:5000/api/doctors")
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/doctors`)
       .then((res) => res.json())
       .then((data: Doctor[]) => {
         setDoctors(data);
@@ -33,7 +33,7 @@ export default function AllDoctorPage(): React.JSX.Element {
 
   // 👉 Approve Doctor
   const handleApprove = (id: string): void => {
-    fetch(`http://localhost:5000/api/doctors/approve/${id}`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/doctors/approve/${id}`, {
       method: "PATCH",
     })
       .then((res) => res.json())
@@ -47,7 +47,7 @@ export default function AllDoctorPage(): React.JSX.Element {
 
   // 👉 Delete Doctor
   const handleDelete = (id: string): void => {
-    fetch(`http://localhost:5000/api/doctors/${id}`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/doctors/${id}`, {
       method: "DELETE",
     })
       .then((res) => res.json())

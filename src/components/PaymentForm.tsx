@@ -47,7 +47,7 @@ export default function PaymentForm({ doctor, selectedDate, isDateValid }: Payme
         const toastId = toast.loading("Processing your payment intent...");
 
         try {
-            const res = await fetch("http://localhost:5000/api/create-payment-intent", {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/create-payment-intent`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -80,7 +80,7 @@ export default function PaymentForm({ doctor, selectedDate, isDateValid }: Payme
             if (result.paymentIntent?.status === "succeeded") {
                 toast.loading("Securing your appointment slot...", { id: toastId });
 
-                const appointmentRes = await fetch("http://localhost:5000/api/appointments", {
+                const appointmentRes = await fetch(`${process.env.NEXT_PUBLIC_API_URLNEXT_PUBLIC_API_URL}//api/appointments`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({

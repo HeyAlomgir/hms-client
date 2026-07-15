@@ -34,7 +34,7 @@ const Doctors = () => {
 
   const loadProducts = async (): Promise<void> => {
     try {
-      const res = await fetch(`http://localhost:5000/api/doctors`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/doctors`);
       const data: Doctor[] = await res.json();
       setDoctors(data);
     } catch (err) {

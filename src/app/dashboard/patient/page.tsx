@@ -46,7 +46,7 @@ export default function PatientDashboard() {
     if(!userId)return;
     const fetchDashboardData = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/my-appointments/${userId}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/my-appointments/${userId}`);
         const data = await res.json();
         if (data.success) {
           setAppointments(data.data);
