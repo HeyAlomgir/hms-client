@@ -1,36 +1,208 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CarePulse — Hospital Management System 🏥
 
-## Getting Started
+CarePulse is a full-stack hospital management platform that connects **patients**, **doctors**, and **admins** in one system — enabling doctor discovery, appointment booking with online payments, and role-based dashboards for managing the entire healthcare workflow.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 🚀 Tech Stack
+
+**Frontend**
+- [Next.js](https://nextjs.org/) (App Router)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [HeroUI](https://heroui.com/) — component library
+- [Framer Motion](https://www.framer.com/motion/) — animations
+- [React Hot Toast](https://react-hot-toast.com/) — notifications
+- [Recharts](https://recharts.org/) — analytics charts
+
+**Backend**
+- [Express.js](https://expressjs.com/) + TypeScript
+- [MongoDB](https://www.mongodb.com/) (Atlas) — database
+- [Stripe](https://stripe.com/) — payment processing
+
+**Authentication**
+- [Better Auth](https://www.better-auth.com/) — email/password + Google OAuth
+- Role-based access control (`patient`, `doctor`, `admin`)
+
+**Other Integrations**
+- [ImgBB](https://imgbb.com/) — image hosting for profile photos
+
+---
+
+## 👥 User Roles & Features
+
+### 🧑‍⚕️ Patient
+- Browse and search doctors by specialization
+- View doctor profiles (availability, fee, ratings, reviews)
+- Book appointments on available dates with secure Stripe payment
+- Bookmark favorite doctors
+- Leave ratings & reviews after consultation
+- View personal appointment history and status
+- Personal analytics dashboard
+
+### 👨‍⚕️ Doctor
+- Manage personal profile (photo, specialization, degree, description, fee, availability)
+- Set working days and time slots
+- View and manage incoming appointments (Approve / Reject / Mark as Completed)
+- View analytics dashboard — total appointments, completed count, revenue estimate, booking trends
+- Change account password
+
+### 🛠️ Admin
+- Approve or reject new doctor registrations
+- View and manage all doctors (add, approve, delete)
+- View and manage all patients (view appointment history, ban/unban)
+- Oversee all appointments platform-wide (search, filter by status, manually cancel)
+- Platform-wide analytics — total doctors, patients, appointments, monthly trends
+
+---
+
+## 🏠 Home Page Sections
+
+1. **Hero Slider** — banner-style carousel of approved doctors with booking CTA
+2. **Platform Stats** — total doctors, patients, appointments, and average rating
+3. **Specializations Grid** — browse doctors by specialty
+4. **How It Works** — 3-step booking guide
+5. **Top Rated Doctors** — highest-rated doctors based on patient reviews
+6. **Patient Testimonials** — real reviews from patients
+7. **Call-to-Action Banner** — sign-up / browse doctors prompt
+
+---
+
+## 📁 Project Structure
+
+```
+hms-client/               # Next.js frontend
+├── src/
+│   ├── app/
+│   │   ├── dashboard/
+│   │   │   ├── patient/
+│   │   │   ├── doctor/
+│   │   │   └── admin/
+│   │   ├── doctors/[id]/
+│   │   ├── signin/
+│   │   ├── signup/
+│   │   └── api/
+│   │       └── auth/            # Better Auth routes
+│   ├── components/
+│   │   ├── home/                # Home page section components
+│   │   ├── PaymentForm.tsx
+│   │   └── Footer.tsx
+│   ├── lib/
+│   │   ├── auth.ts              # Better Auth server config
+│   │   ├── auth-client.ts       # Better Auth client
+│   │   └── stripe.ts
+│   └── middleware.ts            # Route protection
+
+hms-server/                # Express backend
+└── server.ts                # All API routes (doctors, appointments, reviews, bookmarks, stats)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🔑 Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Frontend (`.env.local`)
 
-## Learn More
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000
+NEXT_PUBLIC_IMGBB_API_KEY=your_imgbb_api_key
+MONGO_DB_URI=your_mongodb_connection_string
+GOOGLE_CLIENT_ID=your_google_oauth_client_id
+GOOGLE_CLIENT_SECRET=your_google_oauth_client_secret
+STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Backend (`.env`)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```env
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+STRIPE_SECRET_KEY=your_stripe_secret_key
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## ⚙️ Getting Started
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 1. Clone the repository
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+git clone <repo-url>
+cd hms-client
+```
+
+### 2. Install dependencies
+
+```bash
+# Frontend
+cd hms-client
+npm install
+
+# Backend
+cd ../hms-server
+npm install
+```
+
+### 3. Set up environment variables
+
+Create `.env.local` in `hms-client/` and `.env` in `hms-server/` using the variables listed above.
+
+### 4. Run the development servers
+
+```bash
+# Backend (from hms-server/)
+npm run dev
+
+# Frontend (from hms-client/, in a separate terminal)
+npm run dev
+```
+
+- Frontend: `http://localhost:3000`
+- Backend: `http://localhost:5000`
+
+---
+
+## 🗄️ Database Collections (MongoDB)
+
+| Collection      | Purpose                                      |
+|------------------|-----------------------------------------------|
+| `user`           | Better Auth users (patients, doctors, admins) |
+| `account`        | Better Auth credentials (hashed passwords)    |
+| `session`        | Better Auth sessions                          |
+| `doctor`         | Doctor profiles (specialization, fee, availability) |
+| `appointments`   | Appointment bookings                          |
+| `reviews`        | Doctor ratings & reviews                      |
+| `bookmarks`      | Patient-saved doctors                         |
+
+---
+
+## 🔐 Authentication Flow
+
+- **Patients** sign up directly via email/password or Google.
+- **Doctors** are onboarded by an admin, who creates their auth account (with a temporary password) and doctor profile in one step, linked via `userId`.
+- **Admin** accounts are created manually / seeded.
+- Route protection is handled via Next.js middleware — dashboard routes require an active session.
+
+---
+
+## 💳 Payments
+
+Appointment booking is paid via **Stripe**. The flow:
+1. Patient selects a doctor and an available date.
+2. A payment intent is created on the backend.
+3. Card details are confirmed via Stripe Elements on the frontend.
+4. On successful payment, the appointment is saved with `status: "pending"`, awaiting doctor approval.
+
+---
+
+## 📌 Notes
+
+- All API requests are made to the Express backend; ensure `NEXT_PUBLIC_API_URL` (or your proxy configuration) points to the correct backend URL for your environment.
+- Doctor and patient profile images are uploaded via ImgBB and referenced by URL.
+- Timezone-sensitive analytics (e.g., daily appointment trends) should account for `Asia/Dhaka` if deploying for a Bangladesh-based audience.
+
+---
+
+## 📄 License
+
+This project is for educational/portfolio purposes.

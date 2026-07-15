@@ -4,10 +4,19 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { FiArrowRight } from "react-icons/fi";
 import { authClient } from "@/lib/auth-client";
+import { useEffect, useState } from "react";
 
 export default function CTABanner() {
     const { data: session } = authClient.useSession();
-    const isLoggedIn = !!session?.user;
+    const [isMounted, setIsMounted] = useState<boolean>(false);
+
+    // 🔹 ব্রাউজারে কম্পোনেন্টটি মাউন্ট হওয়া নিশ্চিত করার জন্য
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    // 🔹 যতক্ষণ না ক্লায়েন্ট মাউন্ট হচ্ছে, ততক্ষণ এটি সার্ভার সাইডের সাথে মিল রেখে ডিফল্ট ভ্যালু ধরে রাখবে
+    const isLoggedIn = isMounted ? !!session?.user : false;
 
     return (
         <section className="w-full px-3 sm:px-6 py-10 sm:py-16">

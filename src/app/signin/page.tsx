@@ -1,23 +1,25 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client"; 
+import { Button } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react"; // React ইমপোর্ট করা হয়েছে টাইপের জন্য
 import toast, { Toaster } from "react-hot-toast";
+import { FcGoogle } from "react-icons/fc";
 
 const SignInPage: React.FC = () => {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false); // explicit boolean type
   const [errorMessage, setErrorMessage] = useState<string>(""); // explicit string type
 
-  // ফর্ম সাবমিট ইভেন্টের টাইপ সেট করা হয়েছে
+
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setErrorMessage("");
 
     const formData = new FormData(e.currentTarget);
-    // ফর্ম ডেটাকে টাইপস্ক্রিপ্টের চেনার জন্য Record<string, string> এ কাস্ট করা হয়েছে
+
     const user = Object.fromEntries(formData.entries()) as Record<string, string>;
 
     try {
@@ -42,7 +44,7 @@ const SignInPage: React.FC = () => {
         router.refresh();
       }
     } catch (err) {
-      // ক্যাচ ব্লকের unknown এরর হ্যান্ডেল করা হয়েছে
+
       const errorInstance = err as Error;
       const catchErrMessage = errorInstance.message || "An unexpected error occurred. Please try again.";
       setErrorMessage(catchErrMessage);
@@ -50,6 +52,23 @@ const SignInPage: React.FC = () => {
       console.error("Catch Error:", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+    const handleGoogleSignIn = async () => {
+    try {
+      toast.loading("Connecting to Google...", { id: "google-auth" });
+
+      const data = await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/",
+      });
+
+      console.log(data);
+    } catch (err) {
+      const errorInstance = err as Error;
+      console.error("Google Sign-In Error:", err);
+      toast.error(errorInstance.message || "Google Sign-In failed!", { id: "google-auth" });
     }
   };
 
@@ -111,6 +130,24 @@ const SignInPage: React.FC = () => {
             Sign Up
           </a>
         </div>
+
+           <div className="flex items-center my-5 gap-3">
+          <div className="h-[1px] w-full bg-zinc-900" />
+          <span className="text-[10px] uppercase tracking-widest text-zinc-600 font-semibold">OR</span>
+          <div className="h-[1px] w-full bg-zinc-900" />
+        </div>
+
+        {/* Google sign in */}
+        <Button
+          onClick={handleGoogleSignIn}
+          variant="bordered"
+          className="w-full border-zinc-800 text-white hover:bg-zinc-900 font-medium gap-2 text-sm"
+          radius="xl"
+          size="lg"
+        >
+          <FcGoogle className="text-xl" />
+          Continue with Google
+        </Button>
       </div>
     </div>
   );

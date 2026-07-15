@@ -4,6 +4,7 @@ import { authClient } from "@/lib/auth-client";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { useState, FormEvent } from "react";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 interface Doctor {
     _id: string;
@@ -13,12 +14,13 @@ interface Doctor {
 interface PaymentFormProps {
     doctor: Doctor;
     selectedDate: string;
-    isDateValid: boolean; // 🔥 নতুন prop
+    isDateValid: boolean;
 }
 
 export default function PaymentForm({ doctor, selectedDate, isDateValid }: PaymentFormProps): React.JSX.Element {
     const stripe = useStripe();
     const elements = useElements();
+    const router = useRouter();
     const [loading, setLoading] = useState<boolean>(false);
 
     const { data: session } = authClient.useSession();
@@ -28,7 +30,13 @@ export default function PaymentForm({ doctor, selectedDate, isDateValid }: Payme
 
         if (!stripe || !elements) return;
 
-        // 🔥 date valid না হলে submit ব্লক করা
+        // 🔥 এক্সট্রা safety check — login না থাকলে booking আটকানো
+        if (!session?.user?.id) {
+            toast.error("Please sign in to book an appointment.");
+            router.push(`/signin?redirect=/doctors/${doctor._id}`);
+            return;
+        }
+
         if (!isDateValid) {
             toast.error("Please select a valid appointment date first.");
             return;
@@ -77,7 +85,7 @@ export default function PaymentForm({ doctor, selectedDate, isDateValid }: Payme
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         doctorId: doctor._id,
-                        patientId: session?.user?.id,
+                        patientId: session.user.id,
                         date: selectedDate,
                     }),
                 });
@@ -98,7 +106,13 @@ export default function PaymentForm({ doctor, selectedDate, isDateValid }: Payme
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
-            {!isDateValid && (
+            {!session?.user && (
+                <p className="text-amber-400 text-xs">
+                    ⚠️ You need to sign in before booking an appointment.
+                </p>
+            )}
+
+            {session?.user && !isDateValid && (
                 <p className="text-amber-400 text-xs">
                     ⚠️ Please select a valid appointment date above before paying.
                 </p>
@@ -118,7 +132,7 @@ export default function PaymentForm({ doctor, selectedDate, isDateValid }: Payme
                     },
                 }}
                 className={`p-3 border border-gray-700 rounded-lg bg-[#1e293b] transition-opacity ${
-                    !isDateValid ? "opacity-50 pointer-events-none" : ""
+                    !isDateValid || !session?.user ? "opacity-50 pointer-events-none" : ""
                 }`}
             />
 
@@ -129,6 +143,8 @@ export default function PaymentForm({ doctor, selectedDate, isDateValid }: Payme
             >
                 {loading
                     ? "Processing..."
+                    : !session?.user
+                    ? "Sign in to book"
                     : !isDateValid
                     ? "Select a date to continue"
                     : "Pay & Book Appointment"}
