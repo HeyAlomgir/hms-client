@@ -51,7 +51,7 @@ export default function Hero() {
 
     return (
         <section className="w-full px-3 sm:px-6 pt-6 sm:pt-8">
-            <div className="max-w-7xl mx-auto">
+            <div className="max-w-5xl mx-auto">
 
                 {/* Hero text — fade-in + slide-up */}
                 <motion.div
