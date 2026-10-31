@@ -19,7 +19,7 @@ export default function AllDoctorPage(): React.JSX.Element {
 
   // 👉 Fetch Doctors
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/doctors`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/doctors`)
       .then((res) => res.json())
       .then((data: Doctor[]) => {
         setDoctors(data);

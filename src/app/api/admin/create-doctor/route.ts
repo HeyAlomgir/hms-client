@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       doctor: doctorData,
-      tempPassword, // এটা এখন admin-কে দেখাও, doctor-কে শেয়ার করার জন্য
+      tempPassword,
     });
   } catch (error: any) {
     console.error(error);
