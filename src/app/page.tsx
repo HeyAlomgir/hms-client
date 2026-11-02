@@ -18,6 +18,7 @@ export default function HomePage() {
             {/* ================= HERO BANNER SLIDER ================= */}
             <section className="w-full px-3 sm:px-6 pt-6 sm:pt-8">
                 <Hero/>
+                {/* <DoctorsShowcase/> */}
                 <PlatformStats/>
                 <SpecializationsGrid/>
                 <HowItWorks/>

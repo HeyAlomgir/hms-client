@@ -195,12 +195,7 @@ export default function Hero3D() {
                 <FiCalendar /> Book Appointment
                 <FiArrowRight className="transition group-hover:translate-x-1" />
               </Link>
-              <Link
-                href="/about"
-                className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-semibold text-slate-200 transition hover:border-cyan-400/40 hover:text-cyan-300"
-              >
-                <FiPlay /> Watch Video
-              </Link>
+             
             </div>
 
             {/* Stats */}
