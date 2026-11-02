@@ -184,7 +184,7 @@ function DoctorCard3D({
             ? undefined
             : { rotateX, rotateY, transformStyle: "preserve-3d" }
         }
-        className="group relative h-full rounded-3xl border border-white/10 bg-gradient-to-b from-[#183049] to-[#0a1a2e] shadow-xl shadow-black/30 transition-[border-color,box-shadow] duration-500 hover:border-cyan-400/40 hover:shadow-2xl hover:shadow-cyan-500/20"
+        className=" group relative h-full rounded-3xl border border-white/10 bg-gradient-to-b from-[#183049] to-[#0a1a2e] shadow-xl shadow-black/30 transition-[border-color,box-shadow] duration-500 hover:border-cyan-400/40 hover:shadow-2xl hover:shadow-cyan-500/20"
       >
         {/* glare */}
         {!reduceMotion && (

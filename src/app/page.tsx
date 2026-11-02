@@ -1,6 +1,7 @@
 "use client";
 
 import CTABanner from "@/components/CTABanner";
+import DoctorsShowcase from "@/components/DoctorShowcase";
 import Hero from "@/components/Hero";
 import HowItWorks from "@/components/HowItWorks";
 import PlatformStats from "@/components/PlatformStats";
@@ -18,7 +19,7 @@ export default function HomePage() {
             {/* ================= HERO BANNER SLIDER ================= */}
             <section className="w-full px-3 sm:px-6 pt-6 sm:pt-8">
                 <Hero/>
-                {/* <DoctorsShowcase/> */}
+                <DoctorsShowcase/>
                 <PlatformStats/>
                 <SpecializationsGrid/>
                 <HowItWorks/>
