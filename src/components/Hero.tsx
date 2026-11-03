@@ -40,218 +40,8 @@ interface Doctor {
   status?: string;
 }
 
-const AUTOPLAY_MS = 4500;
-
-/* ------------------------------------------------------------------ */
-/*  Hospital scene drawn 100% with code (SVG) - no image file needed   */
-/* ------------------------------------------------------------------ */
-function HospitalScene() {
-  const wings = [
-    { x: 540, y: 350, w: 220, h: 370, cols: 4, rows: 7 },
-    { x: 760, y: 170, w: 620, h: 550, cols: 14, rows: 10 },
-    { x: 1380, y: 280, w: 280, h: 440, cols: 5, rows: 8 },
-  ];
-
-  const buildings = () =>
-    wings.map((w, wi) => {
-      const cw = w.w / w.cols;
-      const ch = w.h / w.rows;
-      return (
-        <g key={wi}>
-          <rect x={w.x} y={w.y} width={w.w} height={w.h} fill="url(#hs-glass)" />
-          <rect x={w.x} y={w.y} width={w.w} height={6} fill="#8fc0ff" opacity={0.55} />
-          <rect x={w.x} y={w.y} width={3} height={w.h} fill="#8fc0ff" opacity={0.25} />
-          {Array.from({ length: w.rows }).map((_, r) =>
-            Array.from({ length: w.cols }).map((__, c) => {
-              const k = (c * 7 + r * 13 + wi * 5) % 6;
-              const lit = k < 4;
-              const warm = k === 1;
-              const twinkle = (c + r + wi) % 7 === 0;
-              return (
-                <rect
-                  key={`${r}-${c}`}
-                  x={w.x + c * cw + cw * 0.2}
-                  y={w.y + r * ch + ch * 0.22}
-                  width={cw * 0.6}
-                  height={ch * 0.56}
-                  rx={2}
-                  fill={lit ? (warm ? "#ffe7a8" : "#bfe3ff") : "#173a75"}
-                  opacity={lit ? 0.85 : 0.8}
-                >
-                  {twinkle && (
-                    <animate
-                      attributeName="opacity"
-                      values="0.85;0.35;0.85"
-                      dur={`${3 + ((c + r) % 4)}s`}
-                      repeatCount="indefinite"
-                    />
-                  )}
-                </rect>
-              );
-            })
-          )}
-        </g>
-      );
-    });
-
-  const trees = [
-    { x: 70, r: 95 },
-    { x: 210, r: 72 },
-    { x: 330, r: 105 },
-    { x: 470, r: 66 },
-  ];
-
-  return (
-    <svg
-      className="absolute inset-0 h-full w-full"
-      viewBox="0 0 1600 900"
-      preserveAspectRatio="xMidYMid slice"
-      aria-hidden="true"
-    >
-      <defs>
-        <linearGradient id="hs-sky" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#0d3a82" />
-          <stop offset="0.55" stopColor="#0a2250" />
-          <stop offset="1" stopColor="#06101D" />
-        </linearGradient>
-        <linearGradient id="hs-glass" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#2f78e0" />
-          <stop offset="1" stopColor="#0f2f66" />
-        </linearGradient>
-        <linearGradient id="hs-ground" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#0b2a55" />
-          <stop offset="1" stopColor="#06101D" />
-        </linearGradient>
-        <radialGradient id="hs-glow-sky" cx="0.7" cy="0.35" r="0.6">
-          <stop offset="0" stopColor="#22d3ee" stopOpacity="0.35" />
-          <stop offset="1" stopColor="#22d3ee" stopOpacity="0" />
-        </radialGradient>
-        <filter id="hs-glow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="6" result="b" />
-          <feMerge>
-            <feMergeNode in="b" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-        <clipPath id="hs-ground-clip">
-          <rect x="0" y="720" width="1600" height="180" />
-        </clipPath>
-      </defs>
-
-      {/* sky */}
-      <rect width="1600" height="900" fill="url(#hs-sky)" />
-      <rect width="1600" height="900" fill="url(#hs-glow-sky)" />
-
-      {/* stars */}
-      {[
-        [120, 60], [260, 120], [420, 40], [610, 90], [740, 50], [900, 30],
-        [1040, 80], [1180, 40], [1330, 100], [1480, 50], [1550, 150], [80, 200],
-      ].map(([x, y], i) => (
-        <circle key={i} cx={x} cy={y} r={i % 3 === 0 ? 2 : 1.4} fill="#cfe6ff" opacity={0.7}>
-          <animate
-            attributeName="opacity"
-            values="0.8;0.2;0.8"
-            dur={`${2.5 + (i % 4)}s`}
-            repeatCount="indefinite"
-          />
-        </circle>
-      ))}
-
-      {/* soft clouds */}
-      <ellipse cx="300" cy="170" rx="220" ry="26" fill="#6aa8ff" opacity="0.08" />
-      <ellipse cx="1150" cy="110" rx="260" ry="22" fill="#6aa8ff" opacity="0.08" />
-
-      {/* hospital buildings */}
-      {buildings()}
-
-      {/* entrance canopy + glowing doors */}
-      <rect x="1000" y="598" width="200" height="14" rx="4" fill="#cfe6ff" opacity="0.9" />
-      <rect x="1030" y="612" width="140" height="108" fill="#67e8f9" opacity="0.35" />
-      <rect x="1098" y="612" width="4" height="108" fill="#0a2250" opacity="0.6" />
-
-      {/* sign panel */}
-      <rect
-        x="1120"
-        y="195"
-        width="240"
-        height="74"
-        rx="12"
-        fill="#06101D"
-        opacity="0.8"
-        stroke="#22d3ee"
-        strokeOpacity="0.6"
-      />
-      <g filter="url(#hs-glow)">
-        <rect x="1148" y="214" width="14" height="38" rx="2" fill="#67e8f9" />
-        <rect x="1136" y="226" width="38" height="14" rx="2" fill="#67e8f9" />
-      </g>
-      <text
-        x="1190"
-        y="231"
-        fill="#ffffff"
-        fontSize="24"
-        fontWeight="800"
-        fontFamily="system-ui, sans-serif"
-      >
-        CarePulse
-      </text>
-      <text
-        x="1190"
-        y="253"
-        fill="#67e8f9"
-        fontSize="13"
-        fontWeight="700"
-        letterSpacing="5"
-        fontFamily="system-ui, sans-serif"
-      >
-        HOSPITAL
-      </text>
-
-      {/* trees */}
-      {trees.map((t, i) => (
-        <g key={i}>
-          <rect x={t.x - 5} y={690} width={10} height={40} fill="#082033" />
-          <circle cx={t.x} cy={690 - t.r * 0.5} r={t.r} fill="#0a3a4a" />
-          <circle cx={t.x - t.r * 0.45} cy={700 - t.r * 0.3} r={t.r * 0.65} fill="#0c4a56" />
-          <circle cx={t.x + t.r * 0.5} cy={705 - t.r * 0.3} r={t.r * 0.6} fill="#0b4250" />
-        </g>
-      ))}
-
-      {/* ground */}
-      <rect x="0" y="720" width="1600" height="180" fill="url(#hs-ground)" />
-      <g clipPath="url(#hs-ground-clip)" opacity="0.14">
-        <g transform="translate(0,1440) scale(1,-1)">{buildings()}</g>
-      </g>
-      <line
-        x1="0"
-        y1="835"
-        x2="1600"
-        y2="835"
-        stroke="#22d3ee"
-        strokeOpacity="0.25"
-        strokeDasharray="40 30"
-        strokeWidth="3"
-      />
-
-      {/* ambulance */}
-      <g transform="translate(1290,752)">
-        <rect x="0" y="0" width="150" height="64" rx="10" fill="#e8f1ff" />
-        <rect x="104" y="12" width="40" height="26" rx="4" fill="#7fb2ff" opacity="0.8" />
-        <rect x="0" y="40" width="150" height="8" fill="#ef4444" />
-        <rect x="40" y="10" width="8" height="24" fill="#ef4444" />
-        <rect x="32" y="18" width="24" height="8" fill="#ef4444" />
-        <circle cx="38" cy="66" r="11" fill="#06101D" />
-        <circle cx="116" cy="66" r="11" fill="#06101D" />
-        <circle cx="70" cy="-4" r="5" fill="#38bdf8">
-          <animate attributeName="opacity" values="1;0.2;1" dur="1s" repeatCount="indefinite" />
-        </circle>
-        <circle cx="86" cy="-4" r="5" fill="#ef4444">
-          <animate attributeName="opacity" values="0.2;1;0.2" dur="1s" repeatCount="indefinite" />
-        </circle>
-      </g>
-    </svg>
-  );
-}
+/** Doctor slider speed: smaller = faster (milliseconds per slide) */
+const AUTOPLAY_MS = 2500;
 
 export default function Hero3D() {
   const router = useRouter();
@@ -263,7 +53,7 @@ export default function Hero3D() {
   const [playing, setPlaying] = useState(true);
   const [hovering, setHovering] = useState(false);
   const [query, setQuery] = useState("");
-  // true while /images/hospital-bg.jpg loads fine; false -> SVG fallback scene
+  // false -> hospital image missing, plain dark gradient is shown instead
   const [bgOk, setBgOk] = useState(true);
 
   /* ---------- Fetch doctors (dynamic) ---------- */
@@ -358,10 +148,9 @@ export default function Hero3D() {
 
   return (
     <section className="relative left-1/2 isolate flex min-h-screen w-screen -translate-x-1/2 items-center overflow-hidden bg-[#06101D] py-16 text-white">
-      {/* ================= FULL-WINDOW HOSPITAL BACKGROUND ================= */}
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        {/* CarePulse hospital photo (public/images/hospital-bg.jpg), SVG fallback if missing */}
-        {bgOk ? (
+      {/* ================= HERO-ONLY HOSPITAL BACKGROUND (full width) ================= */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+        {bgOk && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src="/images/hospital-bg.jpg"
@@ -369,14 +158,15 @@ export default function Hero3D() {
             onError={() => setBgOk(false)}
             className="absolute inset-0 h-full w-full object-cover object-[70%_center]"
           />
-        ) : (
-          <HospitalScene />
         )}
 
-        {/* blue theme tint so the building stays bright like the design */}
+        {/* blue theme tint so the building stays bright */}
         <div className="absolute inset-0 bg-[#0a2a66]/20" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#06101D]/90 via-[#06101D]/45 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#06101D]/90 via-transparent to-[#06101D]/30" />
+        <div className="absolute inset-0 bg-[#06101D]/25" />
+        {/* dark on the left for text, clear on the right for the building */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#06101D]/90 via-[#06101D]/40 to-transparent" />
+        {/* blends smoothly into the next section */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#06101D] via-transparent to-[#06101D]/30" />
 
         {/* glow blobs */}
         <div className="absolute -left-32 top-0 h-[460px] w-[460px] rounded-full bg-blue-600/25 blur-[130px]" />
@@ -468,6 +258,9 @@ export default function Hero3D() {
             className="relative"
             style={{ perspective: "1400px" }}
           >
+            {/* ---------- Neon hospital name sign ---------- */}
+            
+
             <motion.div
               style={
                 reduceMotion
@@ -526,7 +319,7 @@ export default function Hero3D() {
                           scale: off === 0 ? 1 : 0.86 - abs * 0.04,
                           opacity: visible ? (off === 0 ? 1 : 0.7 - abs * 0.12) : 0,
                         }}
-                        transition={{ type: "spring", stiffness: 120, damping: 20 }}
+                        transition={{ type: "spring", stiffness: 200, damping: 24 }}
                         style={{
                           zIndex: 10 - abs,
                           transformStyle: "preserve-3d",
@@ -654,7 +447,7 @@ export default function Hero3D() {
                     initial={reduceMotion ? false : { opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={reduceMotion ? {} : { opacity: 0, y: -8 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.25 }}
                     className="flex flex-col gap-4 rounded-2xl border border-white/15 bg-[#0C192A]/60 p-4 backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between"
                   >
                     <div className="min-w-0">
