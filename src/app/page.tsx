@@ -2,6 +2,7 @@
 
 import CTABanner from "@/components/CTABanner";
 import DoctorsShowcase from "@/components/DoctorShowcase";
+import FAQSection from "@/components/FAQSection";
 import Hero from "@/components/Hero";
 import HowItWorks from "@/components/HowItWorks";
 import PlatformStats from "@/components/PlatformStats";
@@ -26,6 +27,7 @@ export default function HomePage() {
                 <TopRatedDoctors/>
                 <Testimonials/>
                 <CTABanner/>
+                <FAQSection/>
             </section>
         </div>
     );
