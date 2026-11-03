@@ -49,10 +49,10 @@ export default function FAQSection() {
     return (
         <section
             id="faq"
-            className="container mx-auto relative overflow-hidden  px-4 py-20 sm:px-6 lg:px-8"
+            className="container mx-auto relative overflow-hidden  "
         >
             {/* Background Effects */}
-            <div className="pointer-events-none absolute -left-32 top-20 h-80 w-80 rounded-full bg-cyan-500/10 blur-[120px]" />
+            <div  />
             <div className="pointer-events-none absolute -right-32 bottom-10 h-80 w-80 rounded-full bg-blue-600/10 blur-[120px]" />
 
             <div className="relative mx-auto max-w-7xl">
