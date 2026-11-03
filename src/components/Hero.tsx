@@ -258,8 +258,7 @@ export default function Hero3D() {
             className="relative"
             style={{ perspective: "1400px" }}
           >
-            {/* ---------- Neon hospital name sign ---------- */}
-            
+           
 
             <motion.div
               style={
