@@ -284,7 +284,7 @@ function DoctorCard3D({
                 transformStyle: "preserve-3d",
               }
         }
-        className="group relative h-full overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-[#183049] to-[#0a1a2e] shadow-xl shadow-black/30 transition-all duration-500 hover:border-cyan-400/40 hover:shadow-2xl hover:shadow-cyan-500/20"
+        className="group relative h-full overflow-hidden rounded-3xl border border-white/10 shadow-xl shadow-black/30 transition-all duration-500 hover:border-cyan-400/40 hover:shadow-2xl hover:shadow-cyan-500/20"
       >
         {!reduceMotion && (
           <motion.div
@@ -296,7 +296,7 @@ function DoctorCard3D({
         {/* Doctor image */}
         <Link
           href={`/doctors/${encodeURIComponent(id)}`}
-          className="relative block h-[250px] overflow-hidden bg-gradient-to-br from-blue-100 to-cyan-100"
+          className="relative block h-[250px] overflow-hidden"
         >
           {image ? (
             <motion.img
@@ -321,24 +321,24 @@ function DoctorCard3D({
             </div>
           )}
 
-          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0a1a2e] to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-24" />
         </Link>
 
         {/* Availability */}
         <div
           className={`absolute right-3 top-3 z-20 flex items-center gap-2 rounded-full px-3 py-1.5 text-[10px] font-bold text-white shadow-lg backdrop-blur-md ${
             availability === "Available"
-              ? "bg-emerald-500/90"
-              : "bg-slate-700/90"
+              ? ""
+              : ""
           }`}
           style={{ transform: "translateZ(35px)" }}
         >
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white" />
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full" />
           {availability}
         </div>
 
         <div
-          className="absolute left-3 top-[212px] z-20 rounded-full border border-white/20 bg-black/40 px-3 py-1 text-[10px] font-semibold text-white backdrop-blur-md"
+          className="absolute left-3 top-[212px] z-20 rounded-full border border-white/20 px-3 py-1 text-[10px] font-semibold text-white backdrop-blur-md"
           style={{ transform: "translateZ(30px)" }}
         >
           Verified Specialist
@@ -404,7 +404,7 @@ function DoctorCard3D({
           {/* Fixed appointment route */}
           <Link
             href={`/doctors/${encodeURIComponent(id)}`}
-            className="flex w-full items-center justify-center gap-2 rounded-xl border border-cyan-400/40 bg-gradient-to-r from-blue-600 to-cyan-500 px-3 py-3 text-xs font-extrabold text-white shadow-lg shadow-blue-500/25 transition duration-300 hover:from-cyan-500 hover:to-blue-600 hover:shadow-cyan-500/40"
+            className="flex w-full items-center justify-center gap-2 rounded-xl border border-cyan-400/40 px-3 py-3 text-xs font-extrabold text-white shadow-lg shadow-blue-500/25 transition duration-300 hover: hover: hover:shadow-cyan-500/40"
           >
             <FiCalendar size={15} />
             Book Appointment
@@ -412,7 +412,7 @@ function DoctorCard3D({
           </Link>
         </div>
 
-        <div className="pointer-events-none absolute -right-12 -top-12 h-28 w-28 rounded-full bg-cyan-400/10 blur-3xl transition group-hover:bg-cyan-400/25" />
+        <div className="pointer-events-none absolute -right-12 -top-12 h-28 w-28 rounded-full blur-3xl transition group-hover:" />
       </motion.div>
     </motion.div>
   );
@@ -582,24 +582,9 @@ const DoctorsShowcase = () => {
   };
 
   return (
-    <section className="relative isolate overflow-hidden bg-[#071426] py-20 text-white sm:py-24">
-      {/* Background */}
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute -left-40 top-20 h-[450px] w-[450px] rounded-full bg-blue-600/15 blur-[130px]" />
+    <section className="relative isolate overflow-hidden py-20 text-white sm:py-24">
 
-        <div className="absolute -right-40 bottom-0 h-[500px] w-[500px] rounded-full bg-cyan-500/15 blur-[140px]" />
-
-        <div
-          className="absolute inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px)",
-            backgroundSize: "55px 55px",
-          }}
-        />
-      </div>
-
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Heading */}
         <motion.div
           initial={
@@ -611,14 +596,14 @@ const DoctorsShowcase = () => {
           className="mb-12 flex flex-col justify-between gap-5 md:flex-row md:items-end"
         >
           <div>
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-xs font-bold uppercase tracking-[2px] text-cyan-300">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-400/20 px-4 py-2 text-xs font-bold uppercase tracking-[2px] text-cyan-300">
               <FiHeart />
               Meet Our Medical Experts
             </div>
 
             <h2 className="text-3xl font-black tracking-tight sm:text-4xl lg:text-5xl">
               Our Expert{" "}
-              <span className="bg-gradient-to-r from-cyan-300 via-blue-400 to-indigo-400 bg-clip-text text-transparent">
+              <span className="text-transparent">
                 Doctors
               </span>
             </h2>
@@ -631,7 +616,7 @@ const DoctorsShowcase = () => {
 
           <Link
             href="/doctors"
-            className="group inline-flex w-fit items-center gap-2 rounded-xl border border-cyan-400/30 bg-cyan-400/10 px-5 py-3 text-sm font-bold text-cyan-300 transition hover:border-cyan-300 hover:bg-cyan-400/20"
+            className="group inline-flex w-fit items-center gap-2 rounded-xl border border-cyan-400/30 px-5 py-3 text-sm font-bold text-cyan-300 transition hover:border-cyan-300 hover:"
           >
             View All Doctors
             <FiArrowRight className="transition group-hover:translate-x-1" />
@@ -647,7 +632,7 @@ const DoctorsShowcase = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="h-fit rounded-3xl border border-white/10 bg-white/[0.04] p-4 shadow-2xl shadow-black/20 backdrop-blur-xl"
+            className="h-fit rounded-3xl border border-white/10 p-4 shadow-2xl shadow-black/20 backdrop-blur-xl"
           >
             <div className="mb-5 px-3">
               <p className="text-xs font-bold uppercase tracking-[2px] text-slate-500">
@@ -664,7 +649,7 @@ const DoctorsShowcase = () => {
                 {[1, 2, 3, 4].map((item) => (
                   <div
                     key={item}
-                    className="h-11 animate-pulse rounded-xl bg-white/10"
+                    className="h-11 animate-pulse rounded-xl"
                   />
                 ))}
               </div>
@@ -705,8 +690,8 @@ const DoctorsShowcase = () => {
                       }
                       className={`flex items-center justify-between gap-2 rounded-xl px-3 py-3 text-left text-sm font-semibold transition-all duration-300 ${
                         active
-                          ? "bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-lg shadow-blue-500/30"
-                          : "text-slate-400 hover:bg-white/10 hover:text-white"
+                          ? "   text-white shadow-lg shadow-blue-500/30"
+                          : "text-slate-400 hover: hover:text-white"
                       }`}
                     >
                       <span className="flex min-w-0 items-center gap-3">
@@ -727,8 +712,8 @@ const DoctorsShowcase = () => {
                       <span
                         className={`rounded-md px-2 py-0.5 text-[10px] ${
                           active
-                            ? "bg-white/20 text-white"
-                            : "bg-white/10 text-slate-400"
+                            ? " text-white"
+                            : " text-slate-400"
                         }`}
                       >
                         {count}
@@ -739,8 +724,8 @@ const DoctorsShowcase = () => {
               </div>
             )}
 
-            <div className="mt-6 hidden rounded-2xl border border-cyan-400/10 bg-gradient-to-br from-cyan-400/10 to-blue-500/10 p-4 lg:block">
-              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-400/15 text-cyan-300">
+            <div className="mt-6 hidden rounded-2xl border border-cyan-400/10 p-4 lg:block">
+              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl text-cyan-300">
                 <FiHeart size={20} />
               </div>
 
@@ -767,7 +752,7 @@ const DoctorsShowcase = () => {
                     : { opacity: 0, y: 12 }
                 }
                 animate={{ opacity: 1, y: 0 }}
-                className="mb-6 flex flex-col justify-between gap-4 rounded-2xl border border-cyan-400/20 bg-gradient-to-r from-cyan-400/10 via-blue-500/10 to-indigo-500/10 p-5 sm:flex-row sm:items-center"
+                className="mb-6 flex flex-col justify-between gap-4 rounded-2xl border border-cyan-400/20 p-5 sm:flex-row sm:items-center"
               >
                 <div>
                   <p className="mb-1 text-[10px] font-bold uppercase tracking-[2px] text-cyan-300">
@@ -783,8 +768,8 @@ const DoctorsShowcase = () => {
                   </p>
                 </div>
 
-                <div className="flex shrink-0 items-center gap-3 rounded-xl border border-white/10 bg-black/20 px-4 py-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-400/15 text-cyan-300">
+                <div className="flex shrink-0 items-center gap-3 rounded-xl border border-white/10 px-4 py-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl text-cyan-300">
                     <FiUsers size={20} />
                   </div>
 
@@ -808,14 +793,14 @@ const DoctorsShowcase = () => {
                   (_, index) => (
                     <div
                       key={index}
-                      className="animate-pulse overflow-hidden rounded-3xl border border-white/10 bg-white/5"
+                      className="animate-pulse overflow-hidden rounded-3xl border border-white/10"
                     >
-                      <div className="h-64 bg-white/10" />
+                      <div className="h-64" />
 
                       <div className="space-y-3 p-5">
-                        <div className="mx-auto h-4 w-2/3 rounded bg-white/10" />
-                        <div className="mx-auto h-3 w-1/2 rounded bg-white/10" />
-                        <div className="h-10 rounded-xl bg-white/10" />
+                        <div className="mx-auto h-4 w-2/3 rounded" />
+                        <div className="mx-auto h-3 w-1/2 rounded" />
+                        <div className="h-10 rounded-xl" />
                       </div>
                     </div>
                   )
@@ -825,7 +810,7 @@ const DoctorsShowcase = () => {
 
             {/* Error */}
             {!loading && error && (
-              <div className="flex min-h-[300px] flex-col items-center justify-center rounded-3xl border border-rose-400/20 bg-rose-400/5 p-8 text-center">
+              <div className="flex min-h-[300px] flex-col items-center justify-center rounded-3xl border border-rose-400/20 p-8 text-center">
                 <FiAlertCircle className="mb-4 text-4xl text-rose-400" />
 
                 <h3 className="text-lg font-bold text-white">
@@ -838,7 +823,7 @@ const DoctorsShowcase = () => {
 
                 <button
                   onClick={() => fetchDoctors()}
-                  className="mt-5 inline-flex items-center gap-2 rounded-xl bg-rose-500/15 px-5 py-3 text-sm font-bold text-rose-300"
+                  className="mt-5 inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-rose-300"
                 >
                   <FiRefreshCw />
                   Try Again
@@ -850,7 +835,7 @@ const DoctorsShowcase = () => {
             {!loading &&
               !error &&
               filteredDoctors.length === 0 && (
-                <div className="flex min-h-[300px] flex-col items-center justify-center rounded-3xl border border-white/10 bg-white/[0.035] p-8 text-center">
+                <div className="flex min-h-[300px] flex-col items-center justify-center rounded-3xl border border-white/10 p-8 text-center">
                   <FiUser className="mb-4 text-5xl text-cyan-400" />
 
                   <h3 className="text-xl font-bold text-white">
@@ -866,7 +851,7 @@ const DoctorsShowcase = () => {
                     onClick={() =>
                       changeCategory("All Doctors")
                     }
-                    className="mt-5 rounded-xl bg-cyan-500/15 px-5 py-3 text-sm font-bold text-cyan-300"
+                    className="mt-5 rounded-xl px-5 py-3 text-sm font-bold text-cyan-300"
                   >
                     View All Doctors
                   </button>
@@ -910,7 +895,7 @@ const DoctorsShowcase = () => {
 
                   {/* Pagination */}
                   {totalPages > 1 && (
-                    <div className="mt-8 flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3">
+                    <div className="mt-8 flex items-center justify-between rounded-2xl border border-white/10 px-4 py-3">
                       <p className="text-xs text-slate-400">
                         Showing{" "}
                         <span className="font-bold text-white">
@@ -932,7 +917,7 @@ const DoctorsShowcase = () => {
                           onClick={previousPage}
                           disabled={page === 0}
                           aria-label="Previous doctors"
-                          className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 text-white transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-30"
+                          className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 text-white transition hover: disabled:cursor-not-allowed disabled:opacity-30"
                         >
                           <FiChevronLeft />
                         </button>
@@ -945,7 +930,7 @@ const DoctorsShowcase = () => {
                           onClick={nextPage}
                           disabled={page >= totalPages - 1}
                           aria-label="Next doctors"
-                          className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 text-white transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-30"
+                          className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 text-white transition hover: disabled:cursor-not-allowed disabled:opacity-30"
                         >
                           <FiChevronRight />
                         </button>
@@ -965,9 +950,9 @@ const DoctorsShowcase = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="relative mt-14 overflow-hidden rounded-3xl border border-cyan-400/20 bg-gradient-to-r from-blue-600/20 via-cyan-500/10 to-indigo-600/20 p-7 sm:p-9"
+          className="relative mt-14 overflow-hidden rounded-3xl border border-cyan-400/20 p-7 sm:p-9"
         >
-          <div className="pointer-events-none absolute -right-10 -top-20 h-60 w-60 rounded-full bg-cyan-400/10 blur-3xl" />
+          <div className="pointer-events-none absolute -right-10 -top-20 h-60 w-60 rounded-full blur-3xl" />
 
           <div className="relative flex flex-col items-center justify-between gap-6 text-center md:flex-row md:text-left">
             <div>
@@ -982,7 +967,7 @@ const DoctorsShowcase = () => {
 
             <Link
               href="/doctors"
-              className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 px-6 py-3.5 text-sm font-extrabold text-white shadow-lg shadow-blue-500/20 transition hover:scale-105"
+              className="inline-flex shrink-0 items-center gap-2 rounded-xl px-6 py-3.5 text-sm font-extrabold text-white shadow-lg shadow-blue-500/20 transition hover:scale-105"
             >
               Explore All Doctors
               <FiArrowRight />
