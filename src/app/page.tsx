@@ -4,7 +4,6 @@ import CTABanner from "@/components/CTABanner";
 import DoctorsShowcase from "@/components/DoctorShowcase";
 import FAQSection from "@/components/FAQSection";
 import Hero from "@/components/Hero";
-import HowItWorks from "@/components/HowItWorks";
 import PlatformStats from "@/components/PlatformStats";
 import SpecializationsGrid from "@/components/SpecializationsGrid";
 import Testimonials from "@/components/Testmonials";
@@ -23,7 +22,7 @@ export default function HomePage() {
                 <DoctorsShowcase/>
                 <PlatformStats/>
                 <SpecializationsGrid/>
-                <HowItWorks/>
+                {/* <HowItWorks/> */}
                 <TopRatedDoctors/>
                 <Testimonials/>
                 <CTABanner/>
