@@ -1,8 +1,14 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { FiUsers, FiUserCheck, FiCalendar, FiStar } from "react-icons/fi";
+import {
+    FiUsers,
+    FiUserCheck,
+    FiCalendar,
+    FiStar,
+} from "react-icons/fi";
 
 interface StatsData {
     totalPatients: number;
@@ -27,20 +33,33 @@ function StatItem({
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.5, delay, ease: "easeOut" }}
-            whileHover={{ y: -6, scale: 1.03 }}
-            className="flex flex-col items-center text-center gap-2 px-4 py-6 cursor-default
-                       transition-colors duration-300 hover:bg-white/[0.03]"
+            transition={{
+                duration: 0.5,
+                delay,
+                ease: "easeOut",
+            }}
+            whileHover={{ y: -5, scale: 1.02 }}
+            className="group flex cursor-default flex-col items-center gap-2 rounded-xl border border-slate-700/60 bg-slate-800/70 px-4 py-6 text-center transition-all duration-300 hover:border-cyan-400/30 hover:bg-slate-800"
         >
             <motion.div
                 whileHover={{ scale: 1.15, rotate: 5 }}
-                transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                className="h-11 w-11 sm:h-12 sm:w-12 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center mb-1"
+                transition={{
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 15,
+                }}
+                className="mb-1 flex h-11 w-11 items-center justify-center rounded-xl border border-cyan-400/10 bg-cyan-500/10 text-cyan-400 transition-colors duration-300 group-hover:border-cyan-400/30 group-hover:bg-cyan-500/15 sm:h-12 sm:w-12"
             >
                 {icon}
             </motion.div>
-            <p className="text-2xl sm:text-3xl font-bold text-white">{value}</p>
-            <p className="text-neutral-400 text-xs sm:text-sm">{label}</p>
+
+            <p className="text-2xl font-bold tracking-tight text-white transition-colors duration-300 group-hover:text-cyan-300 sm:text-3xl">
+                {value}
+            </p>
+
+            <p className="text-xs font-medium text-slate-400 sm:text-sm">
+                {label}
+            </p>
         </motion.div>
     );
 }
@@ -50,56 +69,103 @@ export default function PlatformStats() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const load = async () => {
+        const loadStats = async () => {
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin-analytics`);
-                const data = await res.json();
-                if (data.success) setStats(data.data);
-            } catch (err) {
-                console.error(err);
+                const res = await fetch(
+                    `${process.env.NEXT_PUBLIC_API_URL}/api/admin-analytics`,
+                    {
+                        cache: "no-store",
+                    }
+                );
+
+                if (!res.ok) {
+                    throw new Error("Failed to fetch platform statistics");
+                }
+
+                const result = await res.json();
+
+                if (!result.success || !result.data) {
+                    throw new Error("Invalid analytics response");
+                }
+
+                setStats({
+                    totalPatients: result.data.totalPatients ?? 0,
+                    totalDoctors: result.data.totalDoctors ?? 0,
+                    totalAppointments: result.data.totalAppointments ?? 0,
+                    avgRating: result.data.avgRating ?? 0,
+                });
+            } catch (error) {
+                console.error("Platform Stats Error:", error);
             } finally {
                 setLoading(false);
             }
         };
-        load();
+
+        loadStats();
     }, []);
 
-    if (loading || !stats) {
+    // Loading State
+    if (loading) {
         return (
-            <section className="w-full px-3 sm:px-6 py-8">
-                <div className="container mx-auto h-32 rounded-2xl bg-neutral-900 animate-pulse" />
+            <section className="w-full px-3 py-8 sm:px-6">
+                <div className="container mx-auto grid grid-cols-2 overflow-hidden rounded-2xl border border-slate-700/70 bg-slate-900/90 shadow-xl shadow-black/20 sm:grid-cols-4">
+                    {[1, 2, 3, 4].map((item) => (
+                        <div
+                            key={item}
+                            className="flex flex-col items-center gap-3 border-b border-r border-slate-700/60 px-4 py-6"
+                        >
+                            <div className="h-12 w-12 animate-pulse rounded-xl bg-slate-700/70" />
+                            <div className="h-7 w-20 animate-pulse rounded bg-slate-700/70" />
+                            <div className="h-4 w-24 animate-pulse rounded bg-slate-700/70" />
+                        </div>
+                    ))}
+                </div>
             </section>
         );
     }
 
+    // Empty / Error State
+    if (!stats) {
+        return null;
+    }
+
     return (
-        <section className="w-full px-3 sm:px-6 py-8 sm:py-10">
-            <div className="container mx-auto rounded-2xl border border-white/10 bg-neutral-900/60 overflow-hidden">
-                <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-y sm:divide-y-0 divide-white/10">
+        <section className="w-full px-3 py-8 sm:px-6 sm:py-10">
+            <div className="container mx-auto overflow-hidden rounded-2xl border border-slate-700/70 bg-slate-900/90 shadow-xl shadow-black/20">
+                <div className="grid grid-cols-2 divide-x divide-y divide-slate-700/60 sm:grid-cols-4 sm:divide-y-0">
+
                     <StatItem
                         icon={<FiUserCheck size={20} />}
-                        value={`${stats.totalDoctors}+`}
+                        value={`${stats.totalDoctors.toLocaleString()}+`}
                         label="Verified Doctors"
                         delay={0}
                     />
+
                     <StatItem
                         icon={<FiUsers size={20} />}
-                        value={`${stats.totalPatients}+`}
+                        value={`${stats.totalPatients.toLocaleString()}+`}
                         label="Patients Served"
                         delay={0.1}
                     />
+
                     <StatItem
                         icon={<FiCalendar size={20} />}
-                        value={`${stats.totalAppointments}+`}
+                        value={`${stats.totalAppointments.toLocaleString()}+`}
                         label="Appointments Booked"
                         delay={0.2}
                     />
+
                     <StatItem
                         icon={<FiStar size={20} />}
-                        value={stats.avgRating ? `${stats.avgRating}/5` : "New"}
+                        value={
+                            stats.avgRating > 0
+                                ? `${stats.avgRating.toFixed(1)}/5`
+                                : "New"
+                        }
                         label="Average Rating"
                         delay={0.3}
                     />
+
                 </div>
             </div>
         </section>
